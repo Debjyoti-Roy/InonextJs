@@ -1,65 +1,211 @@
-import Image from "next/image";
+// "use client";
+// import React, { useEffect, useRef, useState } from "react";
+// // import Search from "@/Pag/HomePageComponents/Search";
+// import Search from "@/PageComponents/HomePageComponents/Search"
+// import Query from "@/PageComponents/HomePageComponents/Query";
+// import { fetchPartnerProfile } from "@/Redux/store/partnerSlice";
+// import { useDispatch, useSelector } from "react-redux";
+// // import { useLocation, useNavigate } from "react-router-dom";
+// import {  useRouter } from "next/navigation";
+// import { usePathname } from "next/navigation";
+// import About from "@/PageComponents/HomePageComponents/About";
+// import RecentSearches from "@/PageComponents/HomePageComponents/RecentSearches";
 
-export default function Home() {
+// const HomePage = () => {
+//   const location = usePathname();
+//   const topRef = useRef(null);
+//   const router = useRouter();
+//   const dispatch = useDispatch();
+//   const [pickupFlag, setPickupFlag] = useState(false);
+//   const [pickupRoutesDetails, setPickupRoutesDetails] = useState({});
+
+//   const partnerState = useSelector((state) => state.partner);
+//   const [status, setStatus] = useState(401);
+//   const [rejectionStatus, setRejectionStatus] = useState("");
+//   const [selectedTab, setSelectedTab] = useState("");
+
+//   // Runs only when the tab is opened for the first time
+//   useEffect(() => {
+//     if (!sessionStorage.getItem("tabInitialized")) {
+//       // First time tab opened
+//       sessionStorage.setItem("tabInitialized", "true");
+//       localStorage.setItem("navigation", JSON.stringify(false));
+//     }
+
+//     const partner = async () => {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         const res = await dispatch(fetchPartnerProfile({ token }));
+//         setRejectionStatus(res?.payload?.data?.status);
+//         if (res?.payload?.status) {
+//           setStatus(res?.payload?.status);
+//         }
+//       }
+//     };
+
+//     window.addEventListener("tokenUpdated", partner);
+//     partner();
+
+//     return () => window.removeEventListener("tokenUpdated", partner);
+//   }, [dispatch]);
+
+//   //Autoscroll to about and contact us
+//   useEffect(() => {
+//     if (location.state?.scrollTo) {
+//       const sectionId = location.state.scrollTo;
+      
+//       // Small timeout to ensure the DOM is fully rendered
+//       setTimeout(() => {
+//         const element = document.getElementById(sectionId);
+//         if (element) {
+//           const navbarHeight = 80;
+//           const elementTop = element.getBoundingClientRect().top + window.scrollY;
+//           window.scrollTo({
+//             top: elementTop - navbarHeight,
+//             behavior: "smooth",
+//           });
+//         }
+//       }, 100);
+
+//       // Clear state so it doesn't scroll again on refresh
+//       window.history.replaceState({}, document.title);
+//     }
+//   }, [location]);
+
+//   // Check conditions and navigate only once
+//   useEffect(() => {
+//     const hasNavigated = JSON.parse(localStorage.getItem("navigation") || "false");
+
+//     if (!hasNavigated && status === 200 && rejectionStatus === "APPROVED") {
+//       router.push("/partnerdashboard");
+//       localStorage.setItem("navigation", JSON.stringify(true));
+//     } else if (!hasNavigated) {
+//       // Scroll to topRef if navigation not done
+//       if (topRef.current) {
+//         const navbarHeight = 80;
+//         const elementTop = topRef.current.getBoundingClientRect().top + window.scrollY;
+//         window.scrollTo({
+//           top: elementTop - navbarHeight,
+//           behavior: "smooth",
+//         });
+//       }
+//     }
+//   }, [status, rejectionStatus, router]);
+
+//   return (
+//     <>
+//       <Search ref={topRef} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setPickFlag={setPickupFlag} setPickupRoutesDetails={setPickupRoutesDetails} />
+//       <RecentSearches selectedTab={selectedTab} pickupFlag={pickupFlag} setPickupFlag={setPickupFlag} pickupRoutesDetails={pickupRoutesDetails} />
+//       {/* <About />
+//       <Query /> */}
+//       <div id="about-section">
+//         <About />
+//       </div>
+//       <div id="query-section">
+//         <Query />
+//       </div>
+//     </>
+//   );
+// };
+
+// export default HomePage;
+
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import Search from "@/PageComponents/HomePageComponents/Search";
+import Query from "@/PageComponents/HomePageComponents/Query";
+import { fetchPartnerProfile } from "@/Redux/store/partnerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter, useSearchParams } from "next/navigation"; // Use useSearchParams
+import About from "@/PageComponents/HomePageComponents/About";
+import RecentSearches from "@/PageComponents/HomePageComponents/RecentSearches";
+
+const HomePage = () => {
+  const topRef = useRef(null);
+  const router = useRouter();
+  const searchParams = useSearchParams(); // Hook to read URL queries
+  const dispatch = useDispatch();
+  
+  const [pickupFlag, setPickupFlag] = useState(false);
+  const [pickupRoutesDetails, setPickupRoutesDetails] = useState({});
+  const [status, setStatus] = useState(401);
+  const [rejectionStatus, setRejectionStatus] = useState("");
+  const [selectedTab, setSelectedTab] = useState("");
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("tabInitialized")) {
+      sessionStorage.setItem("tabInitialized", "true");
+      localStorage.setItem("navigation", JSON.stringify(false));
+    }
+
+    const partner = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const res = dispatch(fetchPartnerProfile({ token }));
+        setRejectionStatus(res?.payload?.data?.status);
+        if (res?.payload?.status) {
+          setStatus(res?.payload?.status);
+        }
+      }
+    };
+
+    window.addEventListener("tokenUpdated", partner);
+    partner();
+    return () => window.removeEventListener("tokenUpdated", partner);
+  }, [dispatch]);
+
+  // FIX: Autoscroll logic using Search Parameters
+  useEffect(() => {
+    const scrollTo = searchParams.get("scrollTo"); // Read '?scrollTo=...' from URL
+    
+    if (scrollTo) {
+      setTimeout(() => {
+        const element = document.getElementById(scrollTo);
+        if (element) {
+          const navbarHeight = 80;
+          const elementTop = element.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: elementTop - navbarHeight,
+            behavior: "smooth",
+          });
+          
+          // Clear the URL parameter without refreshing the page
+          router.replace("/", { scroll: false });
+        }
+      }, 100);
+    }
+  }, [searchParams, router]);
+
+  useEffect(() => {
+    const hasNavigated = JSON.parse(localStorage.getItem("navigation") || "false");
+
+    if (!hasNavigated && status === 200 && rejectionStatus === "APPROVED") {
+      router.push("/partnerdashboard");
+      localStorage.setItem("navigation", JSON.stringify(true));
+    } else if (!hasNavigated) {
+      if (topRef.current) {
+        const navbarHeight = 80;
+        const elementTop = topRef.current.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: elementTop - navbarHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [status, rejectionStatus, router]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <Search ref={topRef} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setPickFlag={setPickupFlag} setPickupRoutesDetails={setPickupRoutesDetails} />
+      <RecentSearches selectedTab={selectedTab} pickupFlag={pickupFlag} setPickupFlag={setPickupFlag} pickupRoutesDetails={pickupRoutesDetails} />
+      <div id="about-section">
+        <About />
+      </div>
+      <div id="query-section">
+        <Query />
+      </div>
+    </>
   );
-}
+};
+
+export default HomePage;

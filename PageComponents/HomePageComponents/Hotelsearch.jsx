@@ -1,0 +1,332 @@
+"use client"
+import React, { useEffect, useRef, useState } from "react";
+import { places } from "./Places";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+// import { useNavigate } from "react-router-dom";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FaCalendar, FaMapPin, FaUsers } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { getLocations } from "@/Redux/store/hotelSlice";
+import { addDays } from "date-fns";
+import toast from "react-hot-toast";
+
+const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
+  <div
+    onClick={onClick}
+    ref={ref}
+    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-md cursor-pointer flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <FaCalendar className="absolute left-3 text-blue-500 w-5 h-5" />
+    <span className={value ? "text-black" : "text-gray-400"}>
+      {value || placeholder}
+    </span>
+  </div>
+));
+
+const Hotelsearch = () => {
+  const locationRef = useRef(null);
+  const guestRef = useRef(null)
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [showGuestOptions, setShowGuestOptions] = useState(false);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [rooms, setRooms] = useState(1);
+  const [location, setLocation] = useState("");
+  const [locationOptions, setLocationOptions] = useState([]);
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+  // const navigate = useNavigate();
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const formattedDate = (dateString) => {
+    const date = new Date(dateString);
+  
+    if (isNaN(date.getTime())) {
+      
+      return "NOT_VALID"; // or return null / undefined based on your app's logic
+    }
+  
+    const formattedDate = date.toISOString().split("T")[0];
+    return formattedDate;
+  };
+
+  const handleSearch = () => {
+    console.log(formattedDate(startDate))
+    console.log(formattedDate(endDate))
+    if(formattedDate(startDate) === "1970-01-01" || formattedDate(endDate) === "1970-01-01"||formattedDate(startDate) === "1970-01-02" || formattedDate(endDate) === "NOT_VALID" || formattedDate(endDate)==="NOT_VALID" ){
+      toast.error("Please select a date", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      })
+      return
+    }
+    if (formattedDate(startDate) === formattedDate(endDate)) {
+      toast.error("Check-in and Check-out dates cannot be the same", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      })
+      return
+    }
+    if (formattedDate(startDate) > formattedDate(endDate)) {
+      toast.error("Check-in date cannot be greater than check-out date", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      })
+      return
+    }
+    if (location === "") {
+      toast.error("Please select a location", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      })
+      return
+    }
+    if (rooms < 1) {
+      toast.error("Please select a number of rooms", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      })
+      return
+    }
+    if (adults < 1) {
+      toast.error("Please select a number of adults", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      })
+      return
+    }
+    const total = adults + children
+    const myData = {
+      location: location,
+      startDate: formattedDate(startDate),
+      endDate: formattedDate(endDate),
+      rooms: rooms,
+      total: total
+    };
+
+    router.push("/hotelsearch", { state: myData });
+  }
+
+  // Location suggestion input handlers
+  const handleLocationInputChange = (e) => {
+    const value = e.target.value;
+    setLocation(value);
+    if (value.length > 0) {
+      const filtered = locationOptions.filter((opt) =>
+        opt.toLowerCase().includes(value.toLowerCase())
+      );
+      setLocationSuggestions(filtered);
+      setShowLocationSuggestions(true);
+    } else {
+      setLocationSuggestions([]);
+      setShowLocationSuggestions(false);
+    }
+  };
+
+  const handleLocationSuggestionClick = (value) => {
+    setLocation(value);
+    setShowLocationSuggestions(false);
+  };
+
+  useEffect(() => {
+    const job = async () => {
+      const options = await dispatch(getLocations());
+      if (options.payload?.status === 200) {
+        setLocationOptions(options.payload.data || []);
+      }
+    };
+    job();
+  }, [dispatch]);
+
+  // Close location suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        locationRef.current &&
+        !locationRef.current.contains(event.target)
+      ) {
+        setShowLocationSuggestions(false);
+      }
+      if(guestRef.current && !guestRef.current.contains(event.target.parentElement)){
+        setShowGuestOptions(false)
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const tomorrow = addDays(new Date(), 1);
+
+
+
+  return (
+    <div className="package-search-container">
+    {/* <div className="package-search-container"> */}
+      <h2 className="flex lg:justify-start justify-center font-bold lg:pl-[15px] text-2xl text-black pt-[5px] pb-[5px]">Find Your Perfect Stay</h2>
+      <div className="flex w-full lg:p-[10px] p-2">
+
+        <div className="w-full mx-auto flex flex-col lg:flex-row gap-4 lg:gap-2 items-center">
+        {/* <div className="w-full mx-auto bg-white rounded-3xl px-3 py-2 flex flex-col lg:flex-row gap-4 lg:gap-2 items-center"> */}
+          <div ref={locationRef} className="flex-1 w-full relative">
+            <label className="block flex pb-1 text-md font-medium mb-1">Location</label>
+            <div className="relative">
+              <FaMapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-5 h-5 z-[1]" />
+              <input
+                type="text"
+                value={location}
+                onChange={handleLocationInputChange}
+                onFocus={() => location && setShowLocationSuggestions(true)}
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter location"
+              />
+              {showLocationSuggestions && locationSuggestions.length > 0 && (
+                <ul className="absolute z-10 bg-white border border-gray-200 rounded-xl mt-1 w-full max-h-40 overflow-y-auto shadow-lg">
+                  {locationSuggestions.map((place, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleLocationSuggestionClick(place)}
+                      className="px-4 py-2 cursor-pointer hover:bg-blue-100 text-left"
+                    >
+                      {place}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className="flex-[1.5] w-full">
+            <label className="block text-md font-medium mb-1 flex pb-1">Dates</label>
+            <div className="relative">
+              <DatePicker
+                selectsRange
+                startDate={startDate}
+                endDate={endDate}
+                onChange={(update) => {
+                  setStartDate(update[0]);
+                  setEndDate(update[1]);
+                }}
+                minDate={tomorrow} // 👈 this ensures you can't pick a date before tomorrow
+                isClearable
+                placeholderText="Check-in - Check-out"
+                customInput={<CustomDateInput />}
+                popperPlacement="bottom-start"
+                popperClassName="custom-datepicker"
+                className="w-full"
+              />
+            </div>
+          </div>
+
+
+          <div className="relative flex-1 w-full">
+            <label className="block text-md font-medium mb-1 flex pb-1">Guests & Rooms</label>
+            <div
+              onClick={() => setShowGuestOptions(!showGuestOptions)}
+              className="relative w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-md cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <FaUsers className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-5 h-5" />
+              <span className="flex lg:justify-start justify-start">
+
+                {`${adults} Adults${children > 0 ? ` · ${children} Children` : ""} · ${rooms} Rooms`}
+              </span>
+            </div>
+
+            {showGuestOptions && (
+              <div ref={guestRef} className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg p-4 z-10">
+                <div className="flex justify-between items-center mb-2">
+                  <span>Adults</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setAdults(Math.max(1, adults - 1))}
+                      className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                    >
+                      -
+                    </button>
+                    <span>{adults}</span>
+                    <button
+                      onClick={() => setAdults(adults + 1)}
+                      className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center mb-2">
+                  <span>Children</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setChildren(Math.max(0, children - 1))}
+                      className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                    >
+                      -
+                    </button>
+                    <span>{children}</span>
+                    <button
+                      onClick={() => setChildren(children + 1)}
+                      className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span>Rooms</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setRooms(Math.max(1, rooms - 1))}
+                      className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                    >
+                      -
+                    </button>
+                    <span>{rooms}</span>
+                    <button
+                      onClick={() => setRooms(rooms + 1)}
+                      className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="h-full w-full lg:w-auto flex items-end">
+
+            <button
+              onClick={handleSearch}
+              className="bg-blue-600 flex w-full lg:w-auto justify-center
+            items-end text-white rounded-xl px-6 py-3 text-md font-medium hover:bg-blue-700 transition"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Hotelsearch;
