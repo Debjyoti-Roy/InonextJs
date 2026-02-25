@@ -781,12 +781,12 @@ const Navbar = () => {
                 >
                   <div className="googlediv">
                   <Image 
-  src={google} 
-  className="GoogleImage" 
-  alt="google" 
-  width={20} // Provide dimensions or use 'layout="fill"'
-  height={20} 
-/>
+                    src={google} 
+                    className="GoogleImage" 
+                    alt="google" 
+                    width={20} // Provide dimensions or use 'layout="fill"'
+                    height={20} 
+                  />
                     {/* <img src={google} className="GoogleImage" alt="google" /> */}
                     <p className="text-[#555]">Sign in with Google</p>
                   </div>

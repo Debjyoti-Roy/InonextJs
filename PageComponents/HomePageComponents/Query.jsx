@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import side from "@/assets/queryImage.jpg";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   sendPrivateQuery,
   sendPublicQuery,
@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 
 const Query = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  // const [token, setToken] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -24,12 +24,20 @@ const Query = () => {
   const [response, setResponse] = useState("");
   const [priority, setPriority] = useState("");
   const dispatch = useDispatch();
-  const { loading, data, error } = useSelector((state) => state.query);
+  // const { loading, data, error } = useSelector((state) => state.query);
+
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("token");
+  //   if (storedToken) {
+  //     setToken(storedToken);
+  //     setLoggedIn(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const handleTokenUpdate = () => {
       const newToken = localStorage.getItem("token");
-      setToken(newToken);
+      // setToken(newToken);
       if (newToken) {
         setLoggedIn(true);
         const cookies = document.cookie.split("; ");
@@ -238,11 +246,9 @@ const Query = () => {
                   onChange={(e) => setContact(e.target.value)}
                   onBlur={validateContact}
                   placeholder="Contact"
-                  className={`border w-full lg-w-auto ${
-                    error2 ? "border-red-500" : "border-gray-300"
-                  } rounded-md p-3 mb-2 focus:outline-none focus:ring-2 ${
-                    error2 ? "focus:ring-red-500" : "focus:ring-blue-500"
-                  }`}
+                  className={`border w-full lg-w-auto ${error2 ? "border-red-500" : "border-gray-300"
+                    } rounded-md p-3 mb-2 focus:outline-none focus:ring-2 ${error2 ? "focus:ring-red-500" : "focus:ring-blue-500"
+                    }`}
                 />
                 {error2 && (
                   <div className="absolute top-full left-0 mt-1 bg-gray-500 text-white text-xs px-2 py-1 rounded shadow-lg z-10">
