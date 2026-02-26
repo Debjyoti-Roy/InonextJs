@@ -116,6 +116,13 @@ export const AuthProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const router = useRouter();
 
+  const makeTrue=()=>{
+    setIsAuthenticated(true)
+  }
+  const makeFalse=()=>{
+    setIsAuthenticated(false)
+  }
+
   useEffect(() => {
     try {
       const cookies = document.cookie.split("; ");
@@ -128,9 +135,11 @@ export const AuthProtectedRoute = ({ children }) => {
         const userData = JSON.parse(decodeURIComponent(value));
 
         if (userData?.uid) {
-          setIsAuthenticated(true);
+          // setIsAuthenticated(true);
+          makeTrue()
         } else {
-          setIsAuthenticated(false);
+          // setIsAuthenticated(false);
+          makeFalse()
         }
       } else {
         setIsAuthenticated(false);
