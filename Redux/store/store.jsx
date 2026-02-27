@@ -19,6 +19,7 @@ import pickupReducer from "./pickupSlice"
 import carPackageBookingsReducer from './carPackageBookingsSlice'
 import driveModeReducer from './driveModeSlice.jsx'
 import adminCarPickupReducer from './adminCarPickupSlice.jsx'
+import stateReducer from './routeStateManagement'
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -40,5 +41,6 @@ export const store = configureStore({
     carPackageBookings: carPackageBookingsReducer,
     driveMode: driveModeReducer,
     adminCarPickup: adminCarPickupReducer,
+    states:stateReducer
   },
 });

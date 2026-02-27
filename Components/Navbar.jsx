@@ -42,13 +42,13 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [phone, setPhone] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  // const [phoneError, setPhoneError] = useState("");
   const dispatch = useDispatch();
   const { loading, userInfo, error } = useSelector((state) => state.user);
   const [login, setLogin] = useState("login");
   // const [phone, setPhone] = useState("");
   const [error2, setError] = useState(false);
-  const [phoneNumberfunctions, setPhoneNumberFunctions] = useState(false);
+  // const [phoneNumberfunctions, setPhoneNumberFunctions] = useState(false);
   const [currentuser, setCurrentUser] = useState({});
   const [initialToken, setInitialToken] = useState();
   const [userData, setUserData] = useState();
@@ -57,9 +57,18 @@ const Navbar = () => {
   const [firsttimelogin, setFirstTimeLogin] = useState(false);
   const dropdownRef = useRef();
   const isAuthenticating = useRef(false);
-  const navigate = useRouter();
+  // const navigate = useRouter();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Return a simplified version or null for the server
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -449,7 +458,7 @@ const Navbar = () => {
         const elementRect = element.getBoundingClientRect().top;
         const elementPosition = elementRect - bodyRect;
         const offsetPosition = elementPosition - offset;
-  
+
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth",
@@ -462,7 +471,9 @@ const Navbar = () => {
 
 
 
-
+  if (!isMounted) {
+    return;
+  }
   return (
     <>
       <div
@@ -477,17 +488,17 @@ const Navbar = () => {
                 router.push("/")
               }}
                 className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full
-                ${isTransparentRoute ?scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white":"text-blue-600 hover:text-blue-500 after:bg-blue-500"}
+                ${isTransparentRoute ? scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white" : "text-blue-600 hover:text-blue-500 after:bg-blue-500"}
               `}>
                 Home
               </li>
               <li onClick={() => scrollToSection("about-section")} className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full
-                 ${isTransparentRoute ?scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white":"text-blue-600 hover:text-blue-500 after:bg-blue-500"}
+                 ${isTransparentRoute ? scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white" : "text-blue-600 hover:text-blue-500 after:bg-blue-500"}
               `}>
                 About
               </li>
               <li onClick={() => scrollToSection("query-section")} className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full
-                 ${isTransparentRoute ?scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white":"text-blue-600 hover:text-blue-500 after:bg-blue-500"}
+                 ${isTransparentRoute ? scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white" : "text-blue-600 hover:text-blue-500 after:bg-blue-500"}
               `}>
                 Contact us
               </li>
@@ -496,7 +507,7 @@ const Navbar = () => {
                   router.push('/partner')
                 }}
                 className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full
-                   ${isTransparentRoute ?scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white":"text-blue-600 hover:text-blue-500 after:bg-blue-500"}
+                   ${isTransparentRoute ? scrolled ? "text-blue-600 hover:text-blue-500 after:bg-blue-500" : "text-white hover:text-white after:bg-white" : "text-blue-600 hover:text-blue-500 after:bg-blue-500"}
                 `}
               >
                 <span  >
@@ -508,12 +519,16 @@ const Navbar = () => {
                 <button onClick={() => {
                   setShowModal(true)
                   setLogin("login");
-                }} className="LoginBtn">
+
+                }}
+                  suppressHydrationWarning
+                  className="LoginBtn">
                   Login
                 </button>
               ) : (
                 <div className="relative" ref={dropdownRef}>
                   <button
+                  suppressHydrationWarning
                     onClick={() => setShowDropdown(!showDropdown)}
                     className="focus:outline-none"
                   >
@@ -563,6 +578,7 @@ const Navbar = () => {
                       {/* Options */}
                       <div className="flex flex-col">
                         <button
+                        suppressHydrationWarning
                           onMouseDown={() => {
                             router.push("/profile");
                             setShowDropdown(false);
@@ -574,6 +590,7 @@ const Navbar = () => {
                         </button>
 
                         <button
+                        suppressHydrationWarning
                           onMouseDown={() => {
                             router.push("/mybookings");
                             setShowDropdown(false);
@@ -593,6 +610,7 @@ const Navbar = () => {
                         <hr className="my-1 border-gray-200" />
 
                         <button
+                        suppressHydrationWarning
                           onMouseDown={() => {
                             auth.signOut();
                             router.push("/")
@@ -619,12 +637,13 @@ const Navbar = () => {
             <div className="flex justify-between items-center py-3">
               <h2 className="Navspan Navtext">Ino Travels</h2>
               {!user ? (
-                <button onClick={() => setShowModal(true)} className="LoginBtn">
+                <button onClick={() => setShowModal(true)} suppressHydrationWarning className="LoginBtn">
                   Login
                 </button>
               ) : (
                 <div className="relative" ref={dropdownRef}>
                   <button
+                  suppressHydrationWarning
                     onClick={() => setShowDropdown(!showDropdown)}
                     className="focus:outline-none"
                   >
@@ -674,6 +693,7 @@ const Navbar = () => {
                       {/* Options */}
                       <div className="flex flex-col">
                         <button
+                        suppressHydrationWarning
                           onMouseDown={() => {
                             router.push("/profile");
                             setShowDropdown(false);
@@ -685,6 +705,7 @@ const Navbar = () => {
                         </button>
 
                         <button
+                        suppressHydrationWarning
                           onMouseDown={() => {
                             router.push("/mybookings");
                             setShowDropdown(false);
@@ -693,7 +714,7 @@ const Navbar = () => {
                           <FiClipboard className="text-gray-500 text-lg" />
                           My Bookings
                         </button>
-                        
+
                         {/* <button
 
                           className="px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition">
@@ -704,6 +725,7 @@ const Navbar = () => {
                         <hr className="my-1 border-gray-200" />
 
                         <button
+                        suppressHydrationWarning
                           onMouseDown={() => {
                             auth.signOut();
                             router.push("/")
@@ -776,17 +798,18 @@ const Navbar = () => {
                   <span>Sign in securely with google</span>
                 </div>
                 <button
+                suppressHydrationWarning
                   className="googleButton bg-[#fff] w-[80%]"
                   onClick={handleGoogleLogin}
                 >
                   <div className="googlediv">
-                  <Image 
-                    src={google} 
-                    className="GoogleImage" 
-                    alt="google" 
-                    width={20} // Provide dimensions or use 'layout="fill"'
-                    height={20} 
-                  />
+                    <Image
+                      src={google}
+                      className="GoogleImage"
+                      alt="google"
+                      width={20} // Provide dimensions or use 'layout="fill"'
+                      height={20}
+                    />
                     {/* <img src={google} className="GoogleImage" alt="google" /> */}
                     <p className="text-[#555]">Sign in with Google</p>
                   </div>
@@ -820,6 +843,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex gap-[5px] w-full">
                       <button
+                      suppressHydrationWarning
                         className="googleButton bg-[#fff] w-1/2"
                         onClick={() => {
                           phoneNumberChange("");
@@ -830,6 +854,7 @@ const Navbar = () => {
                         </div>
                       </button>
                       <button
+                      suppressHydrationWarning
                         className="googleButton bg-[#2589f3] w-1/2"
                         onClick={() => {
                           phoneNumberChange(phone);

@@ -103,7 +103,7 @@ const Admin = () => {
                             else if (card.title === "Manage Tour Bookings") {
                                 router.push("/admin/managetourbookings")
                             }
-                            else if (card.title === "Manage Partners") {
+                            else if (card.title === "Manage Partner") {
                                 router.push("/admin/managepartners")
                             }
                             else if (card.title === "Manage Routes") {

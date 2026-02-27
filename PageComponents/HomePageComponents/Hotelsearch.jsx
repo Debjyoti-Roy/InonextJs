@@ -1,15 +1,16 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { places } from "./Places";
+// import { places } from "./Places";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 // import { useNavigate } from "react-router-dom";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FaCalendar, FaMapPin, FaUsers } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { getLocations } from "@/Redux/store/hotelSlice";
 import { addDays } from "date-fns";
 import toast from "react-hot-toast";
+import { setHotelSearchData } from "@/Redux/store/routeStateManagement";
 
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
   <div
@@ -125,7 +126,17 @@ const Hotelsearch = () => {
       total: total
     };
 
-    router.push("/hotelsearch", { state: myData });
+    const query = new URLSearchParams({
+  location: location,
+  startDate: formattedDate(startDate),
+  endDate: formattedDate(endDate),
+  rooms: rooms,
+  total: total
+}).toString();
+
+    dispatch(setHotelSearchData(myData))
+
+    router.push(`/hotelsearch?${query}`);
   }
 
   // Location suggestion input handlers
