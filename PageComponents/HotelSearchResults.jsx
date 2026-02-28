@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useLocation, useNavigate } from 'react-router-dom';
 // import { usePathname, useSearchParams } from 'next/navigation';
@@ -10,6 +10,9 @@ import { Carousel } from 'react-responsive-carousel';
 import Slider from '@mui/material/Slider';
 import DatePicker from 'react-datepicker';
 import { Skeleton } from '@mui/material';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Image from 'next/image';
+// import Image from 'next/image';
 
 // eslint-disable-next-line react/display-name
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
@@ -26,11 +29,11 @@ const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) 
 ));
 
 function HotelDescription({ description }) {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, ] = useState(false);
 
-    const toggleDescription = () => {
-        setIsExpanded(!isExpanded);
-    };
+    // const toggleDescription = () => {
+    //     setIsExpanded(!isExpanded);
+    // };
 
     // You can adjust this character limit
     const charLimit = 100;
@@ -44,29 +47,33 @@ function HotelDescription({ description }) {
         </p>)
 }
 
-// Separate Filter Component to prevent re-renders
+
 const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilters }) => {
-    // Filter states
+    // 1. Local states initialized from props
     const [priceRange, setPriceRange] = useState(initialFilters.priceRange);
     const [selectedTags, setSelectedTags] = useState(initialFilters.selectedTags);
     const [selectedAmenities, setSelectedAmenities] = useState(initialFilters.selectedAmenities);
     const [priceSort, setPriceSort] = useState(initialFilters.priceSort);
-    const [activeThumb, setActiveThumb] = useState(null); // 'min' or 'max'
-    const [activeThumb2, setActiveThumb2] = useState(null); // 'min' or 'max'
+    const [isMobile, setIsMobile] = useState(false);
 
-    // Available tags
+    // 2. Sync local state to parent component safely using useEffect
+    // This prevents the "setState during render" error
+    useEffect(() => {
+        onFilterChange({
+            priceRange,
+            selectedTags,
+            selectedAmenities,
+            priceSort
+        });
+    }, [priceRange, selectedTags, selectedAmenities, priceSort, onFilterChange]);
+
+    // Available options (moved inside or could be outside)
     const availableTags = [
-        "Child Friendly",
-        "Pet Friendly",
-        "Group Friendly",
-        "Solo Traveler Friendly",
-        "Senior Citizen Friendly",
-        "Family Friendly",
-        "Couple Friendly",
-        "Backpackers"
+        "Child Friendly", "Pet Friendly", "Group Friendly", 
+        "Solo Traveler Friendly", "Senior Citizen Friendly", 
+        "Family Friendly", "Couple Friendly", "Backpackers"
     ];
 
-    // Available amenities with icons
     const availableAmenities = [
         { name: "Water Purifier", icon: FaWater },
         { name: "Seating Area", icon: FaChair },
@@ -86,133 +93,49 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
         { name: "On-site Restaurant / Kitchen", icon: FaUtensils }
     ];
 
+    // 3. Simplified Handlers (They only update local state now)
     const handleTagToggle = useCallback((tag) => {
-        setSelectedTags(prev => {
-            const newTags = prev.includes(tag)
-                ? prev.filter(t => t !== tag)
-                : [...prev, tag];
-
-            // Update local state only, don't trigger search
-            onFilterChange({
-                priceRange,
-                selectedTags: newTags,
-                selectedAmenities,
-                priceSort
-            });
-
-            return newTags;
-        });
-    }, [priceRange, selectedAmenities, priceSort, onFilterChange]);
+        setSelectedTags(prev => 
+            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+    }, []);
 
     const handleAmenityToggle = useCallback((amenity) => {
-        setSelectedAmenities(prev => {
-            const newAmenities = prev.includes(amenity)
-                ? prev.filter(a => a !== amenity)
-                : [...prev, amenity];
+        setSelectedAmenities(prev => 
+            prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
+        );
+    }, []);
 
-            // Update local state only, don't trigger search
-            onFilterChange({
-                priceRange,
-                selectedTags,
-                selectedAmenities: newAmenities,
-                priceSort
-            });
-
-            return newAmenities;
-        });
-    }, [priceRange, selectedTags, priceSort, onFilterChange]);
-
-    const handlePriceRangeChange = useCallback((type, value) => {
-        setPriceRange(prev => {
-            const newRange = {
-                ...prev,
-                [type]: parseInt(value)
-            };
-
-            // Update local state only, don't trigger search
-            onFilterChange({
-                priceRange: newRange,
-                selectedTags,
-                selectedAmenities,
-                priceSort
-            });
-
-            return newRange;
-        });
-    }, [selectedTags, selectedAmenities, priceSort, onFilterChange]);
-
-    const handlePriceSortChange = useCallback((value) => {
-        setPriceSort(value);
-
-        // Update local state only, don't trigger search
-        onFilterChange({
-            priceRange,
-            selectedTags,
-            selectedAmenities,
-            priceSort: value
-        });
-    }, [priceRange, selectedTags, selectedAmenities, onFilterChange]);
+    const handlePriceRangeChange = useCallback((newValue) => {
+        setPriceRange({ min: newValue[0], max: newValue[1] });
+    }, []);
 
     const clearFilters = useCallback(() => {
-        const defaultFilters = {
-            priceRange: { min: 0, max: 10000 },
-            selectedTags: [],
-            selectedAmenities: [],
-            priceSort: ''
-        };
-
-        setPriceRange(defaultFilters.priceRange);
-        setSelectedTags(defaultFilters.selectedTags);
-        setSelectedAmenities(defaultFilters.selectedAmenities);
-        setPriceSort(defaultFilters.priceSort);
-
-        // Update local state only, don't trigger search
-        onFilterChange(defaultFilters);
-    }, [onFilterChange]);
+        setPriceRange({ min: 0, max: 10000 });
+        setSelectedTags([]);
+        setSelectedAmenities([]);
+        setPriceSort('');
+    }, []);
 
     const handleApplyFilters = useCallback(() => {
-        const currentFilters = {
+        onApplyFilters({
             priceRange,
             selectedTags,
             selectedAmenities,
             priceSort
-        };
-
-        // Trigger the actual search
-        onApplyFilters(currentFilters);
+        });
     }, [priceRange, selectedTags, selectedAmenities, priceSort, onApplyFilters]);
 
-
-
-    // Global mouse up listener to reset active thumb
+    // Screen size listener
     useEffect(() => {
-        const handleGlobalMouseUp = () => {
-            setActiveThumb(null);
-        };
-
-        document.addEventListener('mouseup', handleGlobalMouseUp);
-        return () => {
-            document.removeEventListener('mouseup', handleGlobalMouseUp);
-        };
-    }, []);
-
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkScreenSize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        // Initial check
+        const checkScreenSize = () => setIsMobile(window.innerWidth < 768);
         checkScreenSize();
-
-        // Listen to resize
         window.addEventListener("resize", checkScreenSize);
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
 
     return (
-        <div className="bg-white  rounded-2xl p-6 md:border md:border-gray-200">
+        <div className="bg-white rounded-2xl p-6 md:border md:border-gray-200">
             <div className="flex justify-between items-center pb-4">
                 <h2 className="text-xl font-bold text-gray-800">Filters</h2>
                 <button
@@ -223,12 +146,7 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
                 </button>
             </div>
 
-            <div
-                style={{
-                    marginBottom: isMobile ? "50px" : 0,
-                }}
-                className="space-y-8"
-            >
+            <div style={{ marginBottom: isMobile ? "50px" : 0 }} className="space-y-8">
                 {/* Price Range */}
                 <div>
                     <h3 className="text-md font-semibold text-gray-700 mb-3">Price Range</h3>
@@ -243,23 +161,16 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
                                 min={0}
                                 max={20000}
                                 step={500}
-                                onChange={(_, newValue) => {
-                                    // newValue is [min, max]
-                                    handlePriceRangeChange('min', newValue[0]);
-                                    handlePriceRangeChange('max', newValue[1]);
-                                }}
+                                onChange={(_, newValue) => handlePriceRangeChange(newValue)}
                                 valueLabelDisplay="auto"
-                                getAriaLabel={() => 'Price range'}
                                 marks={[
                                     { value: 0, label: '₹0' },
-                                    { value: 20000, label: '₹20,000' }
+                                    { value: 20000, label: '₹20000' }
                                 ]}
                                 sx={{
-                                    color: '#2563eb', // Tailwind blue-600
+                                    color: '#2563eb',
                                     height: 6,
-                                    '& .MuiSlider-thumb': {
-                                        borderRadius: '50%',
-                                    },
+                                    '& .MuiSlider-thumb': { borderRadius: '50%' },
                                 }}
                             />
                         </div>
@@ -285,11 +196,11 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
                 </div>
 
                 {/* Amenities */}
-                <div style={{ marginTop: "10px" }}>
+                <div style={{ marginTop: "20px" }}>
                     <h3 className="text-md font-semibold text-gray-700 mb-3">Amenities</h3>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                         {availableAmenities.map((amenity) => (
-                            <label key={amenity.name} className="flex items-center gap-2 cursor-pointer text-sm">
+                            <label key={amenity.name} className="flex items-center gap-2 cursor-pointer text-sm hover:bg-gray-50 p-1 rounded">
                                 <input
                                     type="checkbox"
                                     checked={selectedAmenities.includes(amenity.name)}
@@ -302,8 +213,6 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
                     </div>
                 </div>
 
-
-
                 {/* Apply Button */}
                 <div className='pt-5'>
                     <button
@@ -315,28 +224,27 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
                 </div>
             </div>
         </div>
-
     );
 });
 
+FilterSection.displayName = 'FilterSection';
+
 
 const HotelSearchResult = () => {
-    // const location = useLocation();
-    //   const { state } = location;
     const searchParams = useSearchParams();
 
-  const state = {
-    location: searchParams.get('location'),
-    startDate: searchParams.get('startDate'),
-    endDate: searchParams.get('endDate'),
-    rooms: searchParams.get('rooms'),
-    total: searchParams.get('total'),
-  };
-    // const state = useSelector((state) => state.states.hotelSearch);
+    const state = useMemo(() => {
+        return {
+            location: searchParams.get("location") || "",
+            startDate: searchParams.get("startDate") || "",
+            endDate: searchParams.get("endDate") || "",
+            rooms: searchParams.get("rooms") || "",
+            total: searchParams.get("total") || "",
+        };
+    }, [searchParams]);
     const dispatch = useDispatch();
     const { searchResults, loading, error } = useSelector((state) => state.hotel);
     const [page, setPage] = useState(0);
-    //   const navigate = useNavigate()
     const router = useRouter();
 
     // Filter state for the main component
@@ -374,16 +282,13 @@ const HotelSearchResult = () => {
         }));
     }, [dispatch, state, page, appliedFilters]);
 
-    // Handle filter changes from the FilterSection component (local state only)
     const handleFilterChange = useCallback((newFilters) => {
         setFilters(newFilters);
-        // Don't trigger search here - only update local state
     }, []);
 
-    // Handle apply filters button click
     const handleApplyFilters = useCallback((newFilters) => {
         setAppliedFilters(newFilters);
-        setPage(0); // Reset to first page when filters are applied
+        setPage(0);
     }, []);
 
     // Fetch hotels when page changes or applied filters change
@@ -428,7 +333,7 @@ const HotelSearchResult = () => {
     const [endDate, setEndDate] = useState(state.endDate);
     const [showGuestOptions, setShowGuestOptions] = useState(false);
     const [adults, setAdults] = useState(state.total);
-    const [children, setChildren] = useState(0);
+    const [children, ] = useState(0);
     const [rooms, setRooms] = useState(state.rooms);
     const [loadedImages, setLoadedImages] = useState({});
 
@@ -603,7 +508,7 @@ const HotelSearchResult = () => {
                                     )}
                                 </div>
 
-                                <div className="flex flex-col justify-end w-full md:w-auto self-stretch pb-[2px]">
+                                <div className="flex flex-col justify-center w-full md:w-auto self-stretch pb-[2px]">
                                     <button
                                         onClick={handleSearch}
                                         className="bg-blue-600 w-full md:w-auto justify-center cursor-pointer
@@ -621,7 +526,7 @@ const HotelSearchResult = () => {
 
 
             <div className='w-full bg-[#f2f2f2] flex justify-center pt-50 md:pt-10'>
-                <div className="flex flex-col md:flex-row lg:w-[70%] w-full  md:justify-center px-6 lg:px-2 py-0 md:py-6 gap-6 min-h-screen">
+                <div className="flex flex-col md:flex-row lg:w-[70%] w-full mt-5 md:justify-center px-6 lg:px-2 py-0 md:py-6 gap-6 min-h-screen">
                     <div className="hidden md:block md:w-1/3 ">
                         <FilterSection
                             onFilterChange={handleFilterChange}
@@ -629,7 +534,7 @@ const HotelSearchResult = () => {
                             initialFilters={filters}
                         />
                     </div>
-                    <div className="w-full flex flex-col h-full md:min-h-screen pt-5 md:pt-0">
+                    <div className="w-full flex flex-col h-full md:min-h-screen pt-5 md:pt-0 mt-5">
                         <div className="w-full flex justify-between items-center pb-4">
                             <div className="text-2xl font-bold">
                                 Showing properties in {state.location}
@@ -724,7 +629,9 @@ const HotelSearchResult = () => {
                                                             <div className="w-full md:w-[30%] h-[200px] md:h-[100%] bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                                                                 <div className="w-full h-full">
                                                                     {hotel.photoUrls.length === 1 ? (
-                                                                        <img
+                                                                        <Image
+                                                                            fill
+                                                                            // src={img2}
                                                                             src={hotel.photoUrls[0]}
                                                                             alt={hotel.name}
                                                                             onLoad={() => handleImageLoad(hotel.id)}
@@ -741,7 +648,8 @@ const HotelSearchResult = () => {
                                                                         >
                                                                             {hotel.photoUrls.map((url, idx) => (
                                                                                 <div key={idx} className="w-full h-full">
-                                                                                    <img
+                                                                                    <Image
+                                                                                        fill
                                                                                         src={url}
                                                                                         alt={`${hotel.name} ${idx + 1}`}
                                                                                         onLoad={() => handleImageLoad(hotel.id)}

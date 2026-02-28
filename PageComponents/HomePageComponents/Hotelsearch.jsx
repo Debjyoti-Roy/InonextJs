@@ -55,8 +55,8 @@ const Hotelsearch = () => {
   };
 
   const handleSearch = () => {
-    console.log(formattedDate(startDate))
-    console.log(formattedDate(endDate))
+    // console.log(formattedDate(startDate))
+    // console.log(formattedDate(endDate))
     if(formattedDate(startDate) === "1970-01-01" || formattedDate(endDate) === "1970-01-01"||formattedDate(startDate) === "1970-01-02" || formattedDate(endDate) === "NOT_VALID" || formattedDate(endDate)==="NOT_VALID" ){
       toast.error("Please select a date", {
         style: {

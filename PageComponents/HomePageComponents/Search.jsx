@@ -26,9 +26,15 @@ function TabButton({ label, Icon, active, onClick }) {
   );
 }
 
+function imageRender(){
+  const images = [img, img2, img3, img4, img5];
+  const index = Math.floor(Math.random() * images.length);
+  return images[index];
+}
+
 const Search = ({ selectedTab, setSelectedTab, setPickFlag, setPickupRoutesDetails }) => {
   const topRef = useRef(null);
-  const [randomImg, setRandomImg] = useState(img); // default image
+  const [randomImg, ] = useState(imageRender); // default image
 
   useEffect(() => {
     const navbarHeight = 80;
@@ -39,12 +45,12 @@ const Search = ({ selectedTab, setSelectedTab, setPickFlag, setPickupRoutesDetai
     });
 
   }, []);
-  const images = [img, img2, img3, img4, img5];
+//   const images = [img, img2, img3, img4, img5];
 
-useEffect(() => {
-  const index = Math.floor(Math.random() * images.length);
-  setRandomImg(images[index]);
-}, []);
+// useEffect(() => {
+//   const index = Math.floor(Math.random() * images.length);
+//   setRandomImg(images[index]);
+// }, []);
   const [tab, setTab] = useState("Package");
   const [pickupFlag, setPickupFlag] = useState(false);
   const [pickRoutesDetails, setPickRoutesDetails] = useState({});
