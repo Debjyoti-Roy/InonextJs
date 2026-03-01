@@ -4,10 +4,32 @@ import PackageRecentSearch from './RecentSearchComponents/PackageRecentSearch'
 import HotelRecentSearch from './RecentSearchComponents/HotelRecentSearch'
 import PickupRoutes from './PickupRouteComponent/PickupRoutes'
 
+const getCookie = (name) => {
+    const cookie = document.cookie.split('; ').find((row) => row.startsWith(name + '='));
+    return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+  };
+
 const RecentSearches = ({ selectedTab, pickupFlag, setPickupFlag, pickupRoutesDetails }) => {
-  const [carPackageState, setCarPackageState] = useState(false);
-  const [hotelState, setHotelState] = useState(false);
-  const [packageState, setPackageState] = useState(false);
+  // const [carPackageState, setCarPackageState] = useState(false);
+  // const [hotelState, setHotelState] = useState(false);
+  // const [packageState, setPackageState] = useState(false);
+  // Before:
+// const [carPackageState, setCarPackageState] = useState(false);
+
+// After:
+const [carPackageState, ] = useState(() => {
+  return typeof window !== "undefined" ? !!getCookie('carPackageState') : false;
+});
+
+const [hotelState, ] = useState(() => {
+  return typeof window !== "undefined" ? !!getCookie('hotelState') : false;
+});
+
+const [packageState, ] = useState(() => {
+  return typeof window !== "undefined" ? !!getCookie('packageState') : false;
+});
+
+// You can now delete the useEffect entirely!
 
   useEffect(() => {
     if (selectedTab === "Packages") { }
@@ -17,25 +39,22 @@ const RecentSearches = ({ selectedTab, pickupFlag, setPickupFlag, pickupRoutesDe
     }
   }, [selectedTab])
 
-  const getCookie = (name) => {
-    const cookie = document.cookie.split('; ').find((row) => row.startsWith(name + '='));
-    return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
-  };
+  
 
-  useEffect(() => {
-    const carPackageState = getCookie('carPackageState');
-    const hotelState = getCookie('hotelState');
-    const packageState = getCookie('packageState');
-    if (carPackageState) {
-      setCarPackageState(true);
-    }
-    if (hotelState) {
-      setHotelState(true);
-    }
-    if (packageState) {
-      setPackageState(true);
-    }
-  }, [])
+  // useEffect(() => {
+  //   const carPackageState = getCookie('carPackageState');
+  //   const hotelState = getCookie('hotelState');
+  //   const packageState = getCookie('packageState');
+  //   if (carPackageState) {
+  //     setCarPackageState(true);
+  //   }
+  //   if (hotelState) {
+  //     setHotelState(true);
+  //   }
+  //   if (packageState) {
+  //     setPackageState(true);
+  //   }
+  // }, [])
 
 
   useEffect(() => {
