@@ -133,6 +133,7 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
         window.addEventListener("resize", checkScreenSize);
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
+    
 
     return (
         <div className="bg-white rounded-2xl p-6 md:border md:border-gray-200">

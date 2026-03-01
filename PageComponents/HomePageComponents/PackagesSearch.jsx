@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FaMapPin, FaCalendar } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 // import { useNavigate } from "react-router-dom";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getDestinations } from "@/Redux/store/carPackageSlice";
@@ -21,6 +21,8 @@ const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) 
   </div>
 ));
 
+CustomDateInput.displayName = 'CustomDateInput'
+
 const PackagesSearch = () => {
   const destinationRef = useRef(null);
   const dateRef = useRef(null);
@@ -30,7 +32,7 @@ const PackagesSearch = () => {
   const [from, setFrom] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [dest, setDest] = useState([])
+  // const [dest, setDest] = useState([])
   
 
   const dispatch = useDispatch();
@@ -38,18 +40,29 @@ const PackagesSearch = () => {
   useEffect(() => {
     dispatch(getDestinations());
   }, [dispatch]);
-  useEffect(() => {
-    if (destinations.length) {
-      const processedDestinations = [
-        ...new Set(
-          destinations.flatMap((item) =>
-            item.split(",").map((part) => part.trim())
-          )
-        ),
-      ];
-      setDest(processedDestinations)
-    }
-  }, [destinations])
+  // useEffect(() => {
+  //   if (destinations.length) {
+  //     const processedDestinations = [
+  //       ...new Set(
+  //         destinations.flatMap((item) =>
+  //           item.split(",").map((part) => part.trim())
+  //         )
+  //       ),
+  //     ];
+  //     setDest(processedDestinations)
+  //   }
+  // }, [destinations])
+  const processedDestinations = useMemo(() => {
+        if (!destinations.length) return [];
+
+        return [
+            ...new Set(
+                destinations.flatMap((item) =>
+                    item.split(",").map((part) => part.trim())
+                )
+            ),
+        ];
+    }, [destinations]);
 
   // Suggestive input for places
   const handleInputChange = (e) => {
@@ -57,7 +70,7 @@ const PackagesSearch = () => {
     setFrom(value);
 
     if (value.length > 0) {
-      const filtered = dest.filter((d) =>
+      const filtered = processedDestinations.filter((d) =>
         d.toLowerCase().includes(value.toLowerCase())
       );
       setSuggestions(filtered);
@@ -115,13 +128,18 @@ const PackagesSearch = () => {
       return `${day}-${month}-${year}`;
     };
 
-    const myData = {
+    // const myData = {
+    //   location: from,
+    //   travelDate: formatDate(travelDate),
+    // };
+
+    const myData = new URLSearchParams({
       location: from,
       travelDate: formatDate(travelDate),
-    };
+    }).toString();
 
     // console.log(myData);
-    router.push("/tourpackagesearch", { state: myData })
+    router.push(`/tourpackagesearch?${myData}`)
     // console.log(state)
   };
 

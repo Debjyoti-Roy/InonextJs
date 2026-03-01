@@ -25,6 +25,8 @@ const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) 
   </div>
 ));
 
+CustomDateInput.displayName = 'CustomDateInput'
+
 const Hotelsearch = () => {
   const locationRef = useRef(null);
   const guestRef = useRef(null)
@@ -44,12 +46,12 @@ const Hotelsearch = () => {
 
   const formattedDate = (dateString) => {
     const date = new Date(dateString);
-  
+
     if (isNaN(date.getTime())) {
-      
+
       return "NOT_VALID"; // or return null / undefined based on your app's logic
     }
-  
+
     const formattedDate = date.toISOString().split("T")[0];
     return formattedDate;
   };
@@ -57,7 +59,7 @@ const Hotelsearch = () => {
   const handleSearch = () => {
     // console.log(formattedDate(startDate))
     // console.log(formattedDate(endDate))
-    if(formattedDate(startDate) === "1970-01-01" || formattedDate(endDate) === "1970-01-01"||formattedDate(startDate) === "1970-01-02" || formattedDate(endDate) === "NOT_VALID" || formattedDate(endDate)==="NOT_VALID" ){
+    if (formattedDate(startDate) === "1970-01-01" || formattedDate(endDate) === "1970-01-01" || formattedDate(startDate) === "1970-01-02" || formattedDate(endDate) === "NOT_VALID" || formattedDate(endDate) === "NOT_VALID") {
       toast.error("Please select a date", {
         style: {
           borderRadius: "10px",
@@ -118,23 +120,23 @@ const Hotelsearch = () => {
       return
     }
     const total = adults + children
-    const myData = {
+    // const myData = {
+    //   location: location,
+    //   startDate: formattedDate(startDate),
+    //   endDate: formattedDate(endDate),
+    //   rooms: rooms,
+    //   total: total
+    // };
+
+    const query = new URLSearchParams({
       location: location,
       startDate: formattedDate(startDate),
       endDate: formattedDate(endDate),
       rooms: rooms,
       total: total
-    };
+    }).toString();
 
-    const query = new URLSearchParams({
-  location: location,
-  startDate: formattedDate(startDate),
-  endDate: formattedDate(endDate),
-  rooms: rooms,
-  total: total
-}).toString();
-
-    dispatch(setHotelSearchData(myData))
+    // dispatch(setHotelSearchData(myData))
 
     router.push(`/hotelsearch?${query}`);
   }
@@ -179,7 +181,7 @@ const Hotelsearch = () => {
       ) {
         setShowLocationSuggestions(false);
       }
-      if(guestRef.current && !guestRef.current.contains(event.target.parentElement)){
+      if (guestRef.current && !guestRef.current.contains(event.target.parentElement)) {
         setShowGuestOptions(false)
       }
     };
@@ -193,12 +195,12 @@ const Hotelsearch = () => {
 
   return (
     <div className="package-search-container">
-    {/* <div className="package-search-container"> */}
+      {/* <div className="package-search-container"> */}
       <h2 className="flex lg:justify-start justify-center font-bold lg:pl-[15px] text-2xl text-black pt-[5px] pb-[5px]">Find Your Perfect Stay</h2>
       <div className="flex w-full lg:p-[10px] p-2">
 
         <div className="w-full mx-auto flex flex-col lg:flex-row gap-4 lg:gap-2 items-center">
-        {/* <div className="w-full mx-auto bg-white rounded-3xl px-3 py-2 flex flex-col lg:flex-row gap-4 lg:gap-2 items-center"> */}
+          {/* <div className="w-full mx-auto bg-white rounded-3xl px-3 py-2 flex flex-col lg:flex-row gap-4 lg:gap-2 items-center"> */}
           <div ref={locationRef} className="flex-1 w-full relative">
             <label className="block flex pb-1 text-md font-medium mb-1">Location</label>
             <div className="relative">
