@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 import { searchHotels } from '@/Redux/store/hotelSlice';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 // import { useNavigate } from 'react-router-dom';
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const settings = {
     dots: true,

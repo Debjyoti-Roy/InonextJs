@@ -6,7 +6,9 @@ import { MdHotel } from 'react-icons/md';
 import { FaCarSide } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 // import { useNavigate } from 'react-router-dom';
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const settings = {
     dots: false,
@@ -39,7 +41,7 @@ const CarRecentSearch = () => {
         if (savedData) {
             try {
                 const parsedData = JSON.parse(savedData);
-                const [day, month] = parsedData.travelDate.split('-');
+                const [, month] = parsedData.travelDate.split('-');
                 dispatch(getPackages({ area: parsedData.location, month: month }));
             } catch (error) {
                 console.error('Error parsing cookie JSON:', error);

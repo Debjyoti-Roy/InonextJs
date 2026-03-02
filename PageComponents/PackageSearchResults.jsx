@@ -235,11 +235,6 @@ const PackageSearchResults = () => {
                 ),
             ];
         }, [destinations]);
-
-
-    useEffect(() => {
-      console.log(packages)
-    }, [packages])
     
 
     const handleImageLoad = (id) => {
@@ -280,7 +275,7 @@ const PackageSearchResults = () => {
         }).toString();
         window.location.reload();
         // router(".", { state: data });
-        router.push(`/carpackagesearch?${data}`)
+        router.push(`/tourdetails?${data}`)
     }
 
     const handleBookNow = (id) => {
@@ -288,7 +283,7 @@ const PackageSearchResults = () => {
             id: id,
             travelDate: state.travelDate
         }).toString();
-        router.push(`/carpackagedetails?${data}`)
+        router.push(`/tourdetails?${data}`)
     }
     useEffect(() => {
         if (state) {

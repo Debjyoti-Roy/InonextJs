@@ -318,7 +318,7 @@ const HotelSearchResult = () => {
 
     const hotelDetails = (id, startingPrice) => {
         // console.log(id)
-        const data = {
+        const data = new URLSearchParams({
             room: state.rooms,
             location: state.location,
             checkIn: state.startDate,
@@ -326,8 +326,8 @@ const HotelSearchResult = () => {
             id: id,
             total: state.total,
             startingPrice: startingPrice
-        }
-        router.push("/details", { state: data })
+        }).toString();
+        router.push(`/details?${data}`)
     }
 
     const [startDate, setStartDate] = useState(state.startDate);

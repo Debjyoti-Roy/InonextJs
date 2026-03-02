@@ -7,6 +7,8 @@ import { FaCarSide } from 'react-icons/fa';
 import Slider from 'react-slick';
 // import { useNavigate } from 'react-router-dom';
 import { useRouter, useSearchParams } from "next/navigation";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const settings = {
     dots: true,
