@@ -471,7 +471,12 @@ const PackageSearchResults = () => {
                                 ))}
                             </div>
                         )}
-                        {error && <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>Error: {packagesError}</div>}
+                        {error && (
+                            <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>
+                                Error: {error.message || error.error || "An unknown error occurred"}
+                            </div>
+                        )}
+                        {/* {error && <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>Error: {packagesError}</div>} */}
                         {packages && !loading && !error && (
                             <>
                                 {packages.length > 0 ? (

@@ -215,7 +215,7 @@ const CarPackageSearchResults = () => {
     // const navigate = useNavigate()
 
     const fetchCarPackage = useCallback(() => {
-        const [, month, ] = state.travelDate.split("-");
+        const [, month,] = state.travelDate.split("-");
         dispatch(getPackages({ area: state.location, month: month }))
     }, [dispatch, state])
     // const fetchCarPackage2 = useCallback(() => {
@@ -230,7 +230,7 @@ const CarPackageSearchResults = () => {
 
     const fetchCarPackage2 = useCallback(() => {
         // These values come from 'state', so 'state' must be a dependency
-        const [, month, ] = state.travelDate.split("-");
+        const [, month,] = state.travelDate.split("-");
         const appfilters = appliedFilters.selectedCarTypes;
 
         if (appliedFilters.duration !== "" || appfilters.length) {
@@ -527,7 +527,12 @@ const CarPackageSearchResults = () => {
                                 ))}
                             </div>
                         )}
-                        {packagesError && <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>Error: {packagesError}</div>}
+                        {packagesError && (
+                            <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>
+                                Error: {packagesError.message || packagesError.error || "An unknown error occurred"}
+                            </div>
+                        )}
+                        {/* {packagesError && <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>Error: {packagesError}</div>} */}
                         {packages && !packagesLoading && !packagesError && (
                             <>
                                 {packages.length > 0 ? (

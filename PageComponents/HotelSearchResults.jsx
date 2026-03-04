@@ -29,7 +29,7 @@ const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) 
 ));
 
 function HotelDescription({ description }) {
-    const [isExpanded, ] = useState(false);
+    const [isExpanded,] = useState(false);
 
     // const toggleDescription = () => {
     //     setIsExpanded(!isExpanded);
@@ -69,8 +69,8 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
 
     // Available options (moved inside or could be outside)
     const availableTags = [
-        "Child Friendly", "Pet Friendly", "Group Friendly", 
-        "Solo Traveler Friendly", "Senior Citizen Friendly", 
+        "Child Friendly", "Pet Friendly", "Group Friendly",
+        "Solo Traveler Friendly", "Senior Citizen Friendly",
         "Family Friendly", "Couple Friendly", "Backpackers"
     ];
 
@@ -95,13 +95,13 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
 
     // 3. Simplified Handlers (They only update local state now)
     const handleTagToggle = useCallback((tag) => {
-        setSelectedTags(prev => 
+        setSelectedTags(prev =>
             prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
         );
     }, []);
 
     const handleAmenityToggle = useCallback((amenity) => {
-        setSelectedAmenities(prev => 
+        setSelectedAmenities(prev =>
             prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
         );
     }, []);
@@ -133,7 +133,7 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
         window.addEventListener("resize", checkScreenSize);
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
-    
+
 
     return (
         <div className="bg-white rounded-2xl p-6 md:border md:border-gray-200">
@@ -334,7 +334,7 @@ const HotelSearchResult = () => {
     const [endDate, setEndDate] = useState(state.endDate);
     const [showGuestOptions, setShowGuestOptions] = useState(false);
     const [adults, setAdults] = useState(state.total);
-    const [children, ] = useState(0);
+    const [children,] = useState(0);
     const [rooms, setRooms] = useState(state.rooms);
     const [loadedImages, setLoadedImages] = useState({});
 
@@ -602,8 +602,12 @@ const HotelSearchResult = () => {
                             </div>
                         )}
 
-                        {error && <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>Error: {error}</div>}
-
+                        {/* {error && <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>Error: {error}</div>} */}
+                        {error && (
+                            <div className='w-full flex flex-col items-center mt-6 min-h-screen p-8 text-red-500'>
+                                Error: {error.message || error.error || "An unknown error occurred"}
+                            </div>
+                        )}
 
                         {searchResults && !error && (
                             <>
