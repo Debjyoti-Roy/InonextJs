@@ -44,7 +44,7 @@ const Navbar = () => {
   const [phone, setPhone] = useState("");
   // const [phoneError, setPhoneError] = useState("");
   const dispatch = useDispatch();
-  const { loading, userInfo, error } = useSelector((state) => state.user);
+  // const { loading, userInfo, error } = useSelector((state) => state.user);
   const [login, setLogin] = useState("login");
   // const [phone, setPhone] = useState("");
   const [error2, setError] = useState(false);

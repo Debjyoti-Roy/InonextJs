@@ -27,7 +27,7 @@ const CarList = ({ cars, counter }) => {
 
     const drive = async (carId, pickupActive) => {
         dispatch(setPickupActive(pickupActive));
-        router.push(`/drivemode/${carId}`)
+        router.push(`/drivemode?carId=${carId}`)
     }
 
 

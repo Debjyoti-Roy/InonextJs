@@ -93,7 +93,7 @@ const FilterSection = React.memo(({ onFilterChange, onApplyFilters, initialFilte
                             –
                         </button>
                         <span className="text-sm font-medium text-gray-500 text-center flex-1">
-                            {(duration === 0 || duration ==='0')
+                            {(duration === 0 || duration === '0')
                                 ? "Not selected"
                                 : `${duration} Day${duration > 1 ? "s" : ""}`}
                         </span>
@@ -150,15 +150,15 @@ const PackageSearchResults = () => {
     // const navigate = useNavigate()
     // const location = useLocation();
     const router = useRouter();
-        const searchParams = useSearchParams();
-        // const location = useLocation();
-        // const { state } = location;
-        const state = useMemo(() => {
-            return {
-                location: searchParams.get("location") || "",
-                travelDate: searchParams.get("travelDate") || "",
-            };
-        }, [searchParams]);
+    const searchParams = useSearchParams();
+    // const location = useLocation();
+    // const { state } = location;
+    const state = useMemo(() => {
+        return {
+            location: searchParams.get("location") || "",
+            travelDate: searchParams.get("travelDate") || "",
+        };
+    }, [searchParams]);
     // const { state } = location;
     const dispatch = useDispatch()
     // const [dest, setDest] = useState([])
@@ -191,11 +191,11 @@ const PackageSearchResults = () => {
 
 
     const fetchTourPackage = useCallback(() => {
-        const [, month, ] = state.travelDate.split("-");
+        const [, month,] = state.travelDate.split("-");
         dispatch(getPackages({ area: state.location, month: month }))
     }, [dispatch, state])
     const fetchTourPackage2 = useCallback(() => {
-        const [, month, ] = state.travelDate.split("-");
+        const [, month,] = state.travelDate.split("-");
         const appfilters = appliedFilters.selectedCarTypes
         if (appliedFilters.duration !== "" || appfilters.length) {
             dispatch(getPackages({ area: state.location, month: month, tourTypes: appliedFilters.selectedCarTypes, duration: appliedFilters.duration }))
@@ -225,17 +225,17 @@ const PackageSearchResults = () => {
     //     }
     // }, [destinations])
     const processedDestinations = useMemo(() => {
-            if (!destinations.length) return [];
-    
-            return [
-                ...new Set(
-                    destinations.flatMap((item) =>
-                        item.split(",").map((part) => part.trim())
-                    )
-                ),
-            ];
-        }, [destinations]);
-    
+        if (!destinations.length) return [];
+
+        return [
+            ...new Set(
+                destinations.flatMap((item) =>
+                    item.split(",").map((part) => part.trim())
+                )
+            ),
+        ];
+    }, [destinations]);
+
 
     const handleImageLoad = (id) => {
         setLoadedImages((prev) => ({ ...prev, [id]: true }));
@@ -287,19 +287,19 @@ const PackageSearchResults = () => {
     }
     useEffect(() => {
         if (state) {
-          // Step 1: Delete the old cookie if it exists
-          if (document.cookie.split("; ").find((row) => row.startsWith("packageState="))) {
-            document.cookie = "packageState=; path=/; max-age=0"; // instantly expires the cookie
-          }
-        
-          // Step 2: Add the new data
-          document.cookie = `packageState=${encodeURIComponent(
-            JSON.stringify(state)
-          )}; path=/; max-age=2592000`; // 30 days = 2592000 seconds
-        
-          // console.log("Cookie updated with:", state);
+            // Step 1: Delete the old cookie if it exists
+            if (document.cookie.split("; ").find((row) => row.startsWith("packageState="))) {
+                document.cookie = "packageState=; path=/; max-age=0"; // instantly expires the cookie
+            }
+
+            // Step 2: Add the new data
+            document.cookie = `packageState=${encodeURIComponent(
+                JSON.stringify(state)
+            )}; path=/; max-age=2592000`; // 30 days = 2592000 seconds
+
+            // console.log("Cookie updated with:", state);
         }
-      }, [state])
+    }, [state])
     return (
         <div className="max-w-screen overflow-x-hidden">
             <div
@@ -536,8 +536,8 @@ const PackageSearchResults = () => {
                                                                     </div>
 
                                                                     <button
-                                                                    onClick={()=>handleBookNow(pkg.id)}
-                                                                    // onClick={()=>console.log(pkg.id)}
+                                                                        onClick={() => handleBookNow(pkg.id)}
+                                                                        // onClick={()=>console.log(pkg.id)}
                                                                         className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-full text-xs md:text-sm font-semibold hover:bg-blue-700 transition"
                                                                     >
                                                                         Book Now
