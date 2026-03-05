@@ -2,10 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FaCalendar, FaMapPin } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
-import { getDestinations } from "../../Redux/store/carPackageSlice";
+import { getDestinations } from "@/Redux/store/carPackageSlice";
 import toast from "react-hot-toast";
 // import { useNavigate } from "react-router-dom";
 import { useRouter } from "next/navigation";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
   <div

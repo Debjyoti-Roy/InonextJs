@@ -17,6 +17,7 @@ import {
     MdLandscape,
     MdPlace
 } from "react-icons/md";
+import "react-datepicker/dist/react-datepicker.css";
 import { auth, provider } from '@/auth/firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { fetchUserProfile, registerUser } from '@/Redux/store/userSlice';

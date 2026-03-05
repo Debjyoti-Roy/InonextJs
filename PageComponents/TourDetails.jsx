@@ -14,6 +14,7 @@ import TourPackageSuccessModal from './ModalComponent/TourPackageSuccessModal';
 import PaymentFailedModal from './ModalComponent/PaymentFailModal';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useRouter, useSearchParams } from 'next/navigation';
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const TourDetails = () => {

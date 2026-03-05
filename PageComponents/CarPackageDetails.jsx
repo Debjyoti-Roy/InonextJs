@@ -14,6 +14,7 @@ import { carPackageConfirmPayment } from '@/Redux/store/paymentSlice';
 import CarPackageSuccessModal from './ModalComponent/CarPackageSuccessModal';
 import PaymentFailedModal from './ModalComponent/PaymentFailModal';
 import CarShareButton from '@/Components/CarShareButton';
+import "react-datepicker/dist/react-datepicker.css";
 
 const CarPackageDetails = () => {
     // const location = useLocation();

@@ -7,6 +7,7 @@ import { Skeleton } from '@mui/material';
 import { getPackages } from '../Redux/store/tourPackageSlice';
 import { getDestinations } from '../Redux/store/carPackageSlice';
 import { useRouter, useSearchParams } from 'next/navigation';
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (

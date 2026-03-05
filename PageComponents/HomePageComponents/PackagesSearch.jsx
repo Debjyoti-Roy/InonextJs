@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getDestinations } from "@/Redux/store/carPackageSlice";
 
+
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
   <div
     onClick={onClick}

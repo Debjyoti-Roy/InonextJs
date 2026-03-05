@@ -12,6 +12,7 @@ import DatePicker from 'react-datepicker';
 import { Skeleton } from '@mui/material';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
+import "react-datepicker/dist/react-datepicker.css";
 // import Image from 'next/image';
 
 // eslint-disable-next-line react/display-name
@@ -343,30 +344,21 @@ const HotelSearchResult = () => {
     };
 
 
-    //Skeleton
-
-
-
-
-
-
-
-
-
-
-
-
     const handleSearch = () => {
-        const data = {
+        const data = new URLSearchParams({
             location: state.location,
             startDate: new Date(startDate).toISOString().split("T")[0],
             endDate: new Date(endDate).toISOString().split("T")[0],
             rooms: rooms,
             total: adults + children,
-        };
+        }).toString();
 
-        router.push(".", { state: data });
-        window.location.reload();
+        // console.log(data)
+
+        // router.push(".", { state: data });
+        router.push(`/hotelsearch?${data}`);
+        // window.location.reload();
+        // router.refresh();
     }
 
     const topRef = useRef(null);
@@ -478,8 +470,14 @@ const HotelSearchResult = () => {
                                                         -
                                                     </button>
                                                     <span>{adults}</span>
-                                                    <button
+                                                    {/* <button
                                                         onClick={() => setAdults(adults + 1)}
+                                                        className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
+                                                    >
+                                                        +
+                                                    </button> */}
+                                                    <button
+                                                        onClick={() => setAdults(Number(adults) + 1)}
                                                         className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
                                                     >
                                                         +
@@ -498,7 +496,7 @@ const HotelSearchResult = () => {
                                                     </button>
                                                     <span>{rooms}</span>
                                                     <button
-                                                        onClick={() => setRooms(rooms + 1)}
+                                                        onClick={() => setRooms(Number(rooms) + 1)}
                                                         className="w-8 h-8 rounded-full bg-gray-200 text-lg flex items-center justify-center"
                                                     >
                                                         +
@@ -509,10 +507,10 @@ const HotelSearchResult = () => {
                                     )}
                                 </div>
 
-                                <div className="flex flex-col justify-center w-full md:w-auto self-stretch pb-[2px]">
+                                <div className="flex flex-col justify-end w-full md:w-auto self-stretch pb-[2px]">
                                     <button
                                         onClick={handleSearch}
-                                        className="bg-blue-600 w-full md:w-auto justify-center cursor-pointer
+                                        className="bg-blue-600 w-full md:w-auto justify-end cursor-pointer
       text-white rounded-xl px-6 py-3 text-sm font-medium hover:bg-blue-700 transition"
                                     >
                                         Search
@@ -535,7 +533,7 @@ const HotelSearchResult = () => {
                             initialFilters={filters}
                         />
                     </div>
-                    <div className="w-full flex flex-col h-full md:min-h-screen pt-5 md:pt-0 mt-5">
+                    <div className="w-full flex flex-col h-full md:min-h-screen pt-5 md:pt-0">
                         <div className="w-full flex justify-between items-center pb-4">
                             <div className="text-2xl font-bold">
                                 Showing properties in {state.location}

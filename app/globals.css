@@ -71,7 +71,7 @@
 
 .react-datepicker{
   display: flex !important;
-  max-height: 200px !important;
+  /* max-height: 200px !important; */
 }
 
 /* .hero-section::before {

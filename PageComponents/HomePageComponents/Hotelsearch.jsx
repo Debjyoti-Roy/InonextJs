@@ -10,7 +10,8 @@ import { useDispatch } from "react-redux";
 import { getLocations } from "@/Redux/store/hotelSlice";
 import { addDays } from "date-fns";
 import toast from "react-hot-toast";
-import { setHotelSearchData } from "@/Redux/store/routeStateManagement";
+// import { setHotelSearchData } from "@/Redux/store/routeStateManagement";
+// import "react-datepicker/dist/react-datepicker.css";
 
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
   <div

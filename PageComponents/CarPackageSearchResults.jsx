@@ -7,6 +7,7 @@ import { getDestinations, getPackages } from '@/Redux/store/carPackageSlice';
 import DatePicker from 'react-datepicker';
 import { FaCalendar, FaChevronDown, FaFilter, FaMapPin, FaTimes } from 'react-icons/fa';
 import { Skeleton } from '@mui/material';
+import "react-datepicker/dist/react-datepicker.css";
 
 const CustomDateInput = React.forwardRef(({ value, onClick, placeholder }, ref) => (
     <div
