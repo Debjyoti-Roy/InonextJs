@@ -28,7 +28,9 @@ import PaymentSuccessfullModal from '@/PageComponents/ModalComponent/PaymentSucc
 import PaymentFailedModal from '@/PageComponents/ModalComponent/PaymentFailModal';
 import ShareButton from '@/Components/ShareButton';
 import ImageGallery from '@/PageComponents/HotelDetailsComponents/ImageGallery';
-import { Skeleton } from '@mui/material';
+// import { Skeleton } from '@mui/material';
+import Lottie from "lottie-react"
+import loading from "@/assets/Lottie/InfinityLoader.json"
 
 const iconMap = {
     MONUMENT: MdLocationCity,
@@ -364,63 +366,65 @@ const HotelDetails = () => {
     // // const currentState = state || urlState;
     // const currentState = state && !isBase64(urlParams.get('data')) ? state : urlState;
     const router = useRouter();
-const searchParams = useSearchParams();
-const dispatch = useDispatch();
+    const searchParams = useSearchParams();
+    const dispatch = useDispatch();
+    const locationRef = useRef(null);
+    const guestRef = useRef(null)
 
-const state = useMemo(() => {
-  return {
-    id: searchParams.get('id'),
-    checkIn: searchParams.get('checkIn'),
-    checkOut: searchParams.get('checkOut'),
-    total: parseInt(searchParams.get('total')) || 1,
-    room: parseInt(searchParams.get('room')) || 1,
-    location: searchParams.get('location'),
-    startingPrice: searchParams.get('startingPrice')
-      ? parseInt(searchParams.get('startingPrice'))
-      : undefined,
-  };
-}, [searchParams]);
+    const state = useMemo(() => {
+        return {
+            id: searchParams.get('id'),
+            checkIn: searchParams.get('checkIn'),
+            checkOut: searchParams.get('checkOut'),
+            total: parseInt(searchParams.get('total')) || 1,
+            room: parseInt(searchParams.get('room')) || 1,
+            location: searchParams.get('location'),
+            startingPrice: searchParams.get('startingPrice')
+                ? parseInt(searchParams.get('startingPrice'))
+                : undefined,
+        };
+    }, [searchParams]);
 
-const isBase64 = (str) => {
-  if (!str) return false;
-  try {
-    return btoa(atob(str)) === str;
-  } catch {
-    return false;
-  }
-};
+    const isBase64 = (str) => {
+        if (!str) return false;
+        try {
+            return btoa(atob(str)) === str;
+        } catch {
+            return false;
+        }
+    };
 
-const urlState = useMemo(() => {
-  const data = searchParams.get('data');
+    const urlState = useMemo(() => {
+        const data = searchParams.get('data');
 
-  if (data && isBase64(data)) {
-    try {
-      return JSON.parse(decodeURIComponent(atob(data)));
-    } catch {
-      return {};
-    }
-  }
+        if (data && isBase64(data)) {
+            try {
+                return JSON.parse(decodeURIComponent(atob(data)));
+            } catch {
+                return {};
+            }
+        }
 
-  return {
-    id: searchParams.get('id'),
-    checkIn: searchParams.get('checkIn'),
-    checkOut: searchParams.get('checkOut'),
-    total: parseInt(searchParams.get('total')) || 1,
-    room: parseInt(searchParams.get('room')) || 1,
-    location: searchParams.get('location'),
-    startingPrice: searchParams.get('startingPrice')
-      ? parseInt(searchParams.get('startingPrice'))
-      : undefined,
-  };
-}, [searchParams]);
+        return {
+            id: searchParams.get('id'),
+            checkIn: searchParams.get('checkIn'),
+            checkOut: searchParams.get('checkOut'),
+            total: parseInt(searchParams.get('total')) || 1,
+            room: parseInt(searchParams.get('room')) || 1,
+            location: searchParams.get('location'),
+            startingPrice: searchParams.get('startingPrice')
+                ? parseInt(searchParams.get('startingPrice'))
+                : undefined,
+        };
+    }, [searchParams]);
 
-const currentState = useMemo(() => {
-  const data = searchParams.get('data');
+    const currentState = useMemo(() => {
+        const data = searchParams.get('data');
 
-  // If data exists AND is base64 → use urlState
-  // Otherwise → use normal state
-  return data && isBase64(data) ? urlState : state;
-}, [state, urlState, searchParams]);
+        // If data exists AND is base64 → use urlState
+        // Otherwise → use normal state
+        return data && isBase64(data) ? urlState : state;
+    }, [state, urlState, searchParams]);
     const [hotel, setHotelData] = useState({});
     const [numberofDays, setnumberofDays] = useState()
     const [showFull, setShowFull] = useState(false);
@@ -429,9 +433,9 @@ const currentState = useMemo(() => {
     const [nearbyAttractions, setNearbyAttractions] = useState([])
 
     useEffect(() => {
-      console.log(currentState)
+        console.log(currentState)
     }, [currentState])
-    
+
 
     const topRef = useRef(null);
 
@@ -717,6 +721,21 @@ const currentState = useMemo(() => {
             setnumberofDays(diffDays)
         }
     }, [currentState]);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                locationRef.current &&
+                !locationRef.current.contains(event.target)
+            ) {
+                setShowLocationSuggestions(false);
+            }
+            if (guestRef.current && !guestRef.current.contains(event.target.parentElement)) {
+                setShowGuestOptions(false)
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     useEffect(() => {
         if (currentState && currentState.id && currentState.checkIn && currentState.checkOut) {
@@ -775,33 +794,43 @@ const currentState = useMemo(() => {
     }
 
 
+    // if (!hotel || Object.keys(hotel).length === 0) {
+    //     return (
+    //         <div className="min-h-screen w-full bg-gray-50">
+    //             {/* Hero Skeleton */}
+    //             <div className="relative h-[450px] w-full">
+    //                 <Skeleton variant="rectangular" width="100%" height="100%" />
+    //                 <div className="absolute bottom-6 left-6 right-6">
+    //                     <Skeleton variant="text" width="60%" height={40} />
+    //                     <Skeleton variant="text" width="40%" height={25} />
+    //                 </div>
+    //             </div>
+
+    //             {/* About Section */}
+    //             <div className="px-6 pt-8 pb-4 w-full max-w-7xl mx-auto">
+    //                 <Skeleton variant="text" width="40%" height={35} className="mb-4" />
+    //                 <Skeleton variant="rectangular" height={120} className="rounded-lg" />
+
+    //                 {/* Rooms Placeholder */}
+    //                 <div className="pt-10 space-y-4">
+    //                     {[...Array(2)].map((_, i) => (
+    //                         <div key={i} className="bg-white p-4 rounded-xl shadow-sm">
+    //                             <Skeleton variant="text" width="50%" height={30} />
+    //                             <Skeleton variant="text" width="30%" height={20} className="mt-2" />
+    //                             <Skeleton variant="text" width="70%" height={20} className="mt-2" />
+    //                         </div>
+    //                     ))}
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // }
+
     if (!hotel || Object.keys(hotel).length === 0) {
         return (
-            <div className="min-h-screen w-full bg-gray-50">
-                {/* Hero Skeleton */}
-                <div className="relative h-[450px] w-full">
-                    <Skeleton variant="rectangular" width="100%" height="100%" />
-                    <div className="absolute bottom-6 left-6 right-6">
-                        <Skeleton variant="text" width="60%" height={40} />
-                        <Skeleton variant="text" width="40%" height={25} />
-                    </div>
-                </div>
-
-                {/* About Section */}
-                <div className="px-6 pt-8 pb-4 w-full max-w-7xl mx-auto">
-                    <Skeleton variant="text" width="40%" height={35} className="mb-4" />
-                    <Skeleton variant="rectangular" height={120} className="rounded-lg" />
-
-                    {/* Rooms Placeholder */}
-                    <div className="pt-10 space-y-4">
-                        {[...Array(2)].map((_, i) => (
-                            <div key={i} className="bg-white p-4 rounded-xl shadow-sm">
-                                <Skeleton variant="text" width="50%" height={30} />
-                                <Skeleton variant="text" width="30%" height={20} className="mt-2" />
-                                <Skeleton variant="text" width="70%" height={20} className="mt-2" />
-                            </div>
-                        ))}
-                    </div>
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <div className="w-64 h-64">
+                    <Lottie animationData={loading} loop={true} />
                 </div>
             </div>
         );
@@ -844,7 +873,7 @@ const currentState = useMemo(() => {
         router.push(`/details?${newState}`)
 
         // Optionally force reload if needed
-        window.location.reload();
+        // window.location.reload();
     };
     const handleBookNow = (rooms) => {
         // console.log("Rooms array from child:", rooms);
@@ -1124,7 +1153,7 @@ const currentState = useMemo(() => {
                                         <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
                                             To place a booking request, a small{" "}
                                             <span className="font-medium text-gray-900">advance fee</span> is required.
-                                            We'll review availability and confirm your request within{" "}
+                                            We&apos;ll review availability and confirm your request within{" "}
                                             <span className="font-medium text-gray-900">24 hours</span>.
                                         </p>
 
@@ -1132,14 +1161,14 @@ const currentState = useMemo(() => {
                                             <li className="flex items-start gap-3">
                                                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
                                                 <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                                                    If approved, you'll receive a payment link by email/SMS.
+                                                    If approved, you&apos;ll receive a payment link by email/SMS.
                                                 </span>
                                             </li>
 
                                             <li className="flex items-start gap-3">
                                                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
                                                 <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                                                    You'll have{" "}
+                                                    You&apos;ll have{" "}
                                                     <span className="font-semibold text-gray-900">48 hours</span> to
                                                     complete the full payment.
                                                 </span>
@@ -1148,7 +1177,7 @@ const currentState = useMemo(() => {
                                             <li className="flex items-start gap-3">
                                                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
                                                 <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                                                    If payment isn't completed in time, your request will be{" "}
+                                                    If payment isn&apos;t completed in time, your request will be{" "}
                                                     <span className="font-semibold text-gray-900">automatically cancelled</span>{" "}
                                                     and the advance fee becomes{" "}
                                                     <span className="font-semibold text-gray-900">non-refundable</span>.
@@ -1264,7 +1293,7 @@ const currentState = useMemo(() => {
                                 </div>
 
                                 {showGuestOptions && (
-                                    <div className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg p-4 z-10">
+                                    <div ref={guestRef} className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg p-4 z-10">
                                         <div className="flex justify-between items-center mb-2">
                                             <span>People</span>
                                             <div className="flex items-center gap-2">

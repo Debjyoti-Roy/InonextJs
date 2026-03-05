@@ -251,8 +251,6 @@ const Hotelsearch = () => {
               />
             </div>
           </div>
-
-
           <div className="relative flex-1 w-full">
             <label className="block text-md font-medium mb-1 flex pb-1">Guests & Rooms</label>
             <div

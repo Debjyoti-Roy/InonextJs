@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 // import { useLocation, useNavigate } from 'react-router-dom';
 // import { IoIosInformationCircleOutline } from "react-icons/io";
@@ -15,6 +15,8 @@ import CarPackageSuccessModal from './ModalComponent/CarPackageSuccessModal';
 import PaymentFailedModal from './ModalComponent/PaymentFailModal';
 import CarShareButton from '@/Components/CarShareButton';
 import "react-datepicker/dist/react-datepicker.css";
+import Lottie from "lottie-react"
+import loading from "@/assets/Lottie/InfinityLoader.json"
 
 const CarPackageDetails = () => {
     // const location = useLocation();
@@ -61,6 +63,8 @@ const CarPackageDetails = () => {
     // } else {
     //     console.log("No carPackage found in URL");
     // }
+    const destinationRef = useRef(null);
+    const dateRef = useRef(null);
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -128,6 +132,27 @@ const CarPackageDetails = () => {
     const [user, setUser] = useState(null);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [userData, setUserData] = useState();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                destinationRef.current &&
+                !destinationRef.current.contains(event.target)
+            ) {
+                setShowSuggestions(false);
+            }
+            if (
+                dateRef.current &&
+                !dateRef.current.contains(event.target)
+            ) {
+                // setShowDateOptions(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [])
 
 
 
@@ -426,9 +451,29 @@ const CarPackageDetails = () => {
     const pickupPoints = carDetails?.pickupLocation?.split(",").map((p) => p.trim()) || [];
     const dropPoints = carDetails?.dropLocation?.split(",").map((d) => d.trim()) || [];
 
-    if (carDetailsLoading) return <p>Loading...</p>;
-    if (carDetailsError) return <p className="text-red-600">{carDetailsError}</p>;
-    if (!carDetails || carDetails.length === 0) return <p>No details available</p>;
+    if (carDetailsLoading) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <div className="w-64 h-64">
+                    <Lottie animationData={loading} loop={true} />
+                </div>
+            </div>
+        );
+    }
+    if (carDetailsError) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <p className="text-red-600">{carDetailsError}</p>
+            </div>
+        );
+    }
+    if (!carDetails || carDetails.length === 0) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <p>No details available</p>
+            </div>
+        );
+    }
 
 
 

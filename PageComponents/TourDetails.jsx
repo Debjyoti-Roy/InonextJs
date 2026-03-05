@@ -15,6 +15,8 @@ import PaymentFailedModal from './ModalComponent/PaymentFailModal';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useRouter, useSearchParams } from 'next/navigation';
 import "react-datepicker/dist/react-datepicker.css";
+import Lottie from "lottie-react"
+import loading from "@/assets/Lottie/InfinityLoader.json"
 
 
 const TourDetails = () => {
@@ -426,7 +428,7 @@ const TourDetails = () => {
     //Booking khotom
     const [mnth, setMnth] = useState()
     useEffect(() => {
-        const [ , month, ] = currentState.travelDate.split("-");
+        const [, month,] = currentState.travelDate.split("-");
         setMnth(month)
     }, [state])
     const getDetails = useCallback(() => {
@@ -436,12 +438,6 @@ const TourDetails = () => {
         getDetails()
         // console.log(currentState)
     }, [getTourDetails])
-
-    //Booking
-
-    useEffect(() => {
-        console.log("numberOfPeople:", numberofPeople, "type:", typeof numberofPeople);
-    }, [numberofPeople]);
 
 
 
@@ -460,9 +456,30 @@ const TourDetails = () => {
     const pickupPoints = tourDetails?.pickupLocation?.split(",").map((p) => p.trim()) || [];
     const dropPoints = tourDetails?.dropLocation?.split(",").map((d) => d.trim()) || [];
 
-    if (tourDetailsLoading) return <p>Loading...</p>;
-    if (tourDetailsError) return <p className="text-red-600">{tourDetailsError}</p>;
-    if (!tourDetails || tourDetails.length === 0) return <p>No details available</p>;
+    if (tourDetailsLoading) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <div className="w-64 h-64">
+                    <Lottie animationData={loading} loop={true} />
+                </div>
+            </div>
+        );
+    }
+    if (tourDetailsError) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <p className="text-red-600">{tourDetailsError}</p>
+            </div>
+        );
+    }
+    // if (tourDetailsError) return <p className="text-red-600">{tourDetailsError}</p>;
+    if (!tourDetails || tourDetails.length === 0) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-white">
+                <p>No details available</p>
+            </div>
+        );
+    }
     return (
         <div className="w-full bg-gray-50">
             {/* Package Header */}

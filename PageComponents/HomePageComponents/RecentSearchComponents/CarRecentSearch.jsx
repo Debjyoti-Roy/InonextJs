@@ -54,9 +54,9 @@ const CarRecentSearch = () => {
     const handleBookNow = (pkg) => {
         const savedData = getCookie('carPackageState');
         const parsedData = JSON.parse(savedData);
-        const data={
-            id:pkg.id,
-            travelDate:parsedData.travelDate
+        const data = {
+            id: pkg.id,
+            travelDate: parsedData.travelDate
         }
         router.push("/carpackagedetails", { state: data })
     };
@@ -82,20 +82,22 @@ const CarRecentSearch = () => {
                                     />
                                 </div>
 
-                           
-                                <div className="p-6 flex flex-col h-full">
+
+                                <div className="p-6 flex flex-col min-h-[75%]">
                                     {/* Title */}
-                                    <h2 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1 min-h-[28px]">
+                                    <h2 className="text-xl font-bold text-gray-900 mb-1 line-clamp-1 min-h-[28px]">
                                         {pkg.title}
                                     </h2>
 
                                     {/* Description */}
-                                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 min-h-[60px]">
+                                    <p className="text-gray-600 text-sm mb-1 line-clamp-2">
                                         {pkg.description || ""}
                                     </p>
 
                                     {/* Accommodation */}
-                                    <div className="flex items-center gap-3 mb-3 min-h-[60px]">
+                                    {/* <div className="flex justify-between"> */}
+
+                                    <div className="flex items-center gap-3 mb-1 min-h-[60px]">
                                         <MdHotel className="text-blue-600 text-xl" />
                                         <span className="text-gray-800">
                                             <span className="font-semibold block">Accommodation</span>
@@ -104,13 +106,14 @@ const CarRecentSearch = () => {
                                     </div>
 
                                     {/* Transportation */}
-                                    <div className="flex items-center gap-3 mb-6 min-h-[60px]">
+                                    <div className="flex items-center gap-3 mb-2 min-h-[60px]">
                                         <FaCarSide className="text-green-600 text-xl" />
                                         <span className="text-gray-800">
                                             <span className="font-semibold block">Transportation</span>
                                             <span className="text-gray-600">{pkg.carTypes || "Comfort"}</span>
                                         </span>
                                     </div>
+                                    {/* </div> */}
 
                                     {/* Price + Button */}
                                     <div className="flex items-center justify-between mt-auto">

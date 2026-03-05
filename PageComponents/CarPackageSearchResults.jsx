@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { useRouter } from "next/navigation";
@@ -169,6 +169,8 @@ const CarPackageSearchResults = () => {
     //   location: from,
     //   travelDate: formatDate(travelDate),
     // }).toString;
+    const destinationRef = useRef(null);
+      const dateRef = useRef(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     // const location = useLocation();
@@ -249,6 +251,27 @@ const CarPackageSearchResults = () => {
         }
         // Added 'state' and 'dispatch' to the array below
     }, [appliedFilters, state, dispatch]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            destinationRef.current &&
+            !destinationRef.current.contains(event.target)
+          ) {
+            setShowSuggestions(false);
+          }
+          if (
+            dateRef.current &&
+            !dateRef.current.contains(event.target)
+          ) {
+            // setShowDateOptions(false);
+          }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [])
 
 
     useEffect(() => {
@@ -390,7 +413,7 @@ const CarPackageSearchResults = () => {
                             <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-indigo-200 to-transparent rounded-full opacity-20 translate-y-10 -translate-x-10"></div>
 
                             <div className="flex flex-col md:flex-row pr-0 gap-[10px] w-full md:px-2 relative z-10">
-                                <div className="flex-1 w-full relative">
+                                <div ref={destinationRef} className="flex-1 w-full relative">
                                     <label className="block flex pb-1 text-sm font-medium mb-1">Destination</label>
                                     <div className="relative">
                                         <FaMapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-5 h-5" />
@@ -417,7 +440,7 @@ const CarPackageSearchResults = () => {
                                         )}
                                     </div>
                                 </div>
-                                <div className="flex-1 w-full">
+                                <div ref={dateRef} className="flex-1 w-full">
                                     <label className="block text-sm font-medium mb-1 flex pb-1 text-gray-700 flex items-center gap-2">
                                         {/* <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"></div> */}
                                         Dates

@@ -233,6 +233,8 @@ FilterSection.displayName = 'FilterSection';
 
 
 const HotelSearchResult = () => {
+    const locationRef = useRef(null);
+      const guestRef = useRef(null)
     const searchParams = useSearchParams();
 
     const state = useMemo(() => {
@@ -374,6 +376,22 @@ const HotelSearchResult = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            locationRef.current &&
+            !locationRef.current.contains(event.target)
+          ) {
+            setShowLocationSuggestions(false);
+          }
+          if (guestRef.current && !guestRef.current.contains(event.target.parentElement)) {
+            setShowGuestOptions(false)
+          }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+      }, []);
+
 
     return (
         <div className="max-w-screen overflow-x-hidden">
@@ -459,7 +477,7 @@ const HotelSearchResult = () => {
                                     </div>
 
                                     {showGuestOptions && (
-                                        <div className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg p-4 z-10">
+                                        <div  ref={guestRef} className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg p-4 z-10">
                                             <div className="flex justify-between items-center mb-2">
                                                 <span>People</span>
                                                 <div className="flex items-center gap-2">
