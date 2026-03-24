@@ -483,7 +483,7 @@ const CarPackageDetails = () => {
             {/* Package Header */}
             <div className="hero-section">
                 <img
-                    style={{ marginTop: "-8vh" }}
+                    // style={{ marginTop: "-8vh" }}
                     src={carDetails?.thumbnailUrl}
                     alt="package thumbnail"
                     className="hero-img"

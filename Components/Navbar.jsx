@@ -635,7 +635,7 @@ const Navbar = () => {
           <div className="lg:hidden">
             {/* First Row - Logo and Login/User */}
             <div className="flex justify-between items-center py-3">
-              <h2 className="Navspan Navtext">Ino Travels</h2>
+              <h2 className={`Navspan Navtext ${isTransparentRoute ? scrolled ? "text-blue-600" : "text-white" : "text-blue-600"}`}>Ino Travels</h2>
               {!user ? (
                 <button onClick={() => setShowModal(true)} suppressHydrationWarning className="LoginBtn">
                   Login
@@ -750,20 +750,20 @@ const Navbar = () => {
               <ul className="NavOptions Navtext mobile-nav">
                 <li onClick={() => {
                   router.push("/")
-                }} className="cursor-pointer relative text-gray-700 hover:text-blue-600 transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap">
+                }} className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap ${isTransparentRoute ? scrolled ? "text-blue-600" : "text-white" : "text-blue-600"}`}>
                   Home
                 </li>
-                <li onClick={() => scrollToSection("about-section")} className="cursor-pointer relative text-gray-700 hover:text-blue-600 transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap">
+                <li onClick={() => scrollToSection("about-section")} className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap ${isTransparentRoute ? scrolled ? "text-blue-600" : "text-white" : "text-blue-600"}`}>
                   About
                 </li>
-                <li onClick={() => scrollToSection("query-section")} className="cursor-pointer relative text-gray-700 hover:text-blue-600 transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap">
+                <li onClick={() => scrollToSection("query-section")} className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap ${isTransparentRoute ? scrolled ? "text-blue-600" : "text-white" : "text-blue-600"}`}>
                   Contact us
                 </li>
                 <li
                   onClick={() => {
                     router.push('/partner')
                   }}
-                  className="cursor-pointer relative text-gray-700 hover:text-blue-600 transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full"
+                  className={`cursor-pointer relative transition-colors duration-300 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap ${isTransparentRoute ? scrolled ? "text-blue-600" : "text-white" : "text-blue-600"}`}
                 >
                   <span  >
                     {userDetails?.role === "PARTNER" ? "Partner Dashboard" : "Be a Partner"}

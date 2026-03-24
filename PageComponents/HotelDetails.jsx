@@ -992,12 +992,13 @@ const HotelDetails = () => {
             {/* Hero Image */}
             <div className="hero-section">
                 {hotel && hotel.videoUrl ? (
-                    <video style={{ marginTop: "-8vh" }} autoPlay muted loop className="hero-img">
+                    <video autoPlay muted loop className="hero-img">
+                    {/* <video style={{ marginTop: "-8vh" }} autoPlay muted loop className="hero-img"> */}
                         <source src={hotel.videoUrl} type="video/mp4" />
                     </video>
                 ) : (
                     <img
-                        style={{ marginTop: "-8vh" }}
+                        // style={{ marginTop: "-8vh" }}
                         src={hotel?.imageUrls[0]}
                         alt={hotel?.name}
                         className="hero-img"

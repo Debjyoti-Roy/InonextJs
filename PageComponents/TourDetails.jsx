@@ -486,7 +486,7 @@ const TourDetails = () => {
             <div className="hero-section">
                 {/* <div className="relative h-[350px] w-full "> */}
                 <img
-                    style={{ marginTop: "-8vh" }}
+                    // style={{ marginTop: "-8vh" }}
                     src={tourDetails?.thumbnailUrl}
                     alt="package thumbnail"
                     className="hero-img"

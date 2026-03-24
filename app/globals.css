@@ -69,9 +69,16 @@
   margin-top: -8vh;
 }
 
+@media (max-width: 639px) {
+  .hero-img {
+    margin-top: -12vh;
+  }
+}
+
+
 .react-datepicker{
   display: flex !important;
-  /* max-height: 200px !important; */
+  max-height: 240px !important;
 }
 
 /* .hero-section::before {

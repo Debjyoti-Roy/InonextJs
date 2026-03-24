@@ -9,7 +9,8 @@ const containerStyle = {
 
 const GoogleRouteMap = ({ route, distance }) => {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_MAPS_KEY,
+    // googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
   });
 
   
