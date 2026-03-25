@@ -62,11 +62,11 @@ const Admin = () => {
             desc: "Create, update, and manage car packages.",
             color: "from-indigo-500 to-purple-600"
         },
-        {
-            title: "Manage Partners",
-            desc: "Accept or Reject Partner Requests",
-            color: "from-indigo-500 to-purple-600"
-        },
+        // {
+        //     title: "Manage Partners",
+        //     desc: "Accept or Reject Partner Requests",
+        //     color: "from-indigo-500 to-purple-600"
+        // },
         {
             title: "Manage Routes",
             desc: "Create, update, and manage routes.",

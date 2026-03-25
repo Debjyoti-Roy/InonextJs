@@ -73,7 +73,7 @@ const CarPackagesList = () => {
   };
   return (
     <>
-      {isOpen ? <DetailsPage carPackageDetails={carPackageDetails} isOpen={()=>setIsOpen(false)} onEditBasic={async(id)=>await viewDetails(id)} /> : (
+      {isOpen ? <DetailsPage carPackageDetails={carPackageDetails} isOpen={() => setIsOpen(false)} onEditBasic={async (id) => await viewDetails(id)} /> : (
         <>
 
 
@@ -97,12 +97,20 @@ const CarPackagesList = () => {
                   >
                     {/* Thumbnail */}
                     {pkg.thumbnailUrl && (
-                      <div className="flex-shrink-0">
+                      // <div className="flex-shrink-0">
+                      //   <Image
+                      //     fill
+                      //     src={pkg.thumbnailUrl}
+                      //     alt={pkg.title}
+                      //     className="w-18 h-full rounded-l-lg"
+                      //   />
+                      // </div>
+                      <div className="flex-shrink-0 relative w-50 h-auto">
                         <Image
                           fill
                           src={pkg.thumbnailUrl}
                           alt={pkg.title}
-                          className="w-48 h-full object-cover rounded-l-lg"
+                          className="object-cover rounded-l-lg"
                         />
                       </div>
                     )}
