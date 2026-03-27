@@ -5,6 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { FaTimes } from "react-icons/fa";
 import ItenaryDetails from './DetailsPageComponents/ItenaryDetails';
 import TourItenaryDetails from './DetailsPageComponents/TourItineryDetails';
+import TourBasicDetails from './DetailsPageComponents/TourBasicDetails';
 
 const MONTHS = [
     "January", "February", "March", "April", "May", "June",
@@ -171,10 +172,10 @@ const TourDetails = ({ tourPackageDetails, isOpen, onEdit }) => {
                                             </div>
 
                                             {/* Content */}
-                                            {/* <BasicDetails carPackageDetails={carPackageDetails} basicClose={() => {
-                                                            setBasic(false)
-                                                            onEditBasic(carPackageDetails.packageId)
-                                                        }} /> */}
+                                            <TourBasicDetails tourDetails={tourPackageDetails} basicClose={() => {
+                                                setBasic(false)
+                                                onEdit(tourPackageDetails.id)
+                                            }} />
                                         </div>
 
                                     </div>
