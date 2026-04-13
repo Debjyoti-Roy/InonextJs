@@ -384,8 +384,9 @@ const CarPackageDetails = () => {
             const decoded = JSON.parse(decodeURIComponent(value));
 
 
+            // key: import.meta.env.VITE_RAZORPAY_KEY,
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY,
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
                 name: "INO TRAVELS",
                 description: "Car Package Booking Payment",
                 order_id: bookPackageData.razorpayOrderId,

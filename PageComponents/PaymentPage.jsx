@@ -259,7 +259,23 @@ const PaymentPage = () => {
         }
     };
 
-    const openRazorpay = (orderId) => {
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const openRazorpay = async(orderId) => {
+        const isLoaded = await loadRazorpayScript();
+
+        if (!isLoaded) {
+            alert("Razorpay SDK failed to load. Check your internet.");
+            return;
+        }
         const cookies = document.cookie.split("; ");
         const userDataCookie = cookies.find((row) =>
             row.startsWith("userData=")
@@ -279,8 +295,9 @@ const PaymentPage = () => {
         const value = userDataCookie.split("=")[1];
         const decoded = JSON.parse(decodeURIComponent(value));
 
+        // key: import.meta.env.VITE_RAZORPAY_KEY,
         const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY,
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
             name: "INO TRAVELS",
             description: "Hotel Booking Payment",
             order_id: orderId,

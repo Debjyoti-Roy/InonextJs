@@ -7,6 +7,7 @@ const MyTourQueries = () => {
     const { tourPackageBookings, tourPackageBookingsLoading, tourPackageBookingsError, tourPackageBookingsStatus } = useSelector((state) => state.profile)
     const [tabs, setTabs] = useState("New")
     // const [page, setPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0);
     const [size] = useState(10);
     const [content, setContent] = useState([])
     const [totalPages, setTotalPages] = useState(1)
@@ -40,12 +41,14 @@ const MyTourQueries = () => {
     const handlePrevPage = () => {
         if (currentPage > 0) {
             setCurrentPage((prev) => prev - 1);
+            setPageNumber((prev) => prev - 1)
         }
     };
 
     const handleNextPage = () => {
         if (pageNumber + 1 < totalPages) {
             setCurrentPage((prev) => prev + 1);
+            setPageNumber((prev) => prev + 1)
         }
     };
 

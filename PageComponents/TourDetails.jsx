@@ -717,7 +717,7 @@ const TourDetails = () => {
                                             </div>
 
                                             {/* Price + Button */}
-                                            <div className="flex items-center justify-between mt-auto">
+                                            <div className="flex items-center justify-between">
                                                 <span className="text-lg font-bold text-gray-900">
                                                     ₹{activePrice.toLocaleString("en-IN")}
                                                 </span>

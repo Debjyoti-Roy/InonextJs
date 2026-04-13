@@ -57,14 +57,24 @@ export const createPickupBooking = createAsyncThunk(
   "pickup/createPickupBooking",
   async (booking, { rejectWithValue }) => {
     try {
+      // console.log(booking)
       const token = localStorage.getItem("token");
-      const formattedDate = new Date(booking.pickUpTime).toISOString().split('.')[0];
+      // const istDate = new Date(booking.pickUpTime).toLocaleString("en-IN", {
+      //   timeZone: "Asia/Kolkata",
+      //   hour12: false,
+      // }).replace(",", "");
+      const istDate = new Date(
+        new Date(booking.pickUpTime).getTime() + 19800000
+      )
+        .toISOString()
+        .replace("Z", "");
+      // const formattedDate = new Date(booking.pickUpTime).toISOString().split('.')[0];
       const response = await api.post(
         `/v1/private/car-package-bookings/create-booking` +
         `?routeid=${encodeURIComponent(booking.routeid)}` +
         `&pickuplocation=${encodeURIComponent(booking.pickuplocation)}` +
         `&droplocation=${encodeURIComponent(booking.droplocation)}` +
-        `&pickUpTime=${formattedDate}`,
+        `&pickUpTime=${istDate}`,
         {},
         {
           headers: {
