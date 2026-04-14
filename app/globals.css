@@ -61,7 +61,18 @@
 }
 .hero-img {
   width: 100%;
+  /* height: 20vh; */
   height: 480px;
+  /* height: 53vh; */
+  object-fit: cover;
+  /* max-height: 50vh; */
+  z-index: 0;
+  margin-top: -8vh;
+}
+.hero-img2 {
+  /* width: 100%; */
+  /* height: 20vh; */
+  /* height: 480px; */
   /* height: 53vh; */
   object-fit: cover;
   /* max-height: 50vh; */

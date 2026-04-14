@@ -68,6 +68,14 @@ const Search = ({ selectedTab, setSelectedTab, setPickFlag, setPickupRoutesDetai
       <div ref={topRef} className="hero-section">
         {/* <img src={randomImg} alt="Hero" className="hero-img" /> */}
         <Image src={randomImg} alt="Hero" className="hero-img" />
+        {/* <div className="relative w-full h-[480px]" style={{marginTop:"-8vh"}}>
+  <Image
+    src={randomImg}
+    alt="Hero"
+    fill
+    className="hero-img2"
+  />
+</div> */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
         <div className="hero-text">
           <h1>Discover Your Next Adventure</h1>

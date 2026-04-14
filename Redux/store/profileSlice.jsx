@@ -280,7 +280,9 @@ const profileSlice = createSlice({
     resetCancel: (state) => {
       state.cancelCarPickupBookingSuccess = false;
       state.cancelCarPickupBookingError = null;
-      state.cancelCarPickupBookingLoading = false
+      state.cancelCarPickupBookingLoading = false;
+      state.latestCarPickupBooking=null;
+      state.allCarPickupBookings=[]
     }
   },
   extraReducers: (builder) => {

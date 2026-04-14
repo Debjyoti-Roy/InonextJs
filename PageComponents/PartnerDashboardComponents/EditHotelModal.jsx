@@ -397,14 +397,40 @@ const EditHotelModal = ({ hotel, onClose, onSuccess, setCounter }) => {
                 <h3 className="text-xl font-semibold mb-2">Image Upload</h3>
                 <div className="flex flex-col gap-3">
                   <div className="grid grid-cols-2 gap-4">
-                    {mediaImagesPreview?.map((preview, index) => (
+                    {/* {mediaImagesPreview?.map((preview, index) => (
                       <div key={index} className="relative bg-gray-100 rounded overflow-hidden">
-                        <Image src={preview} alt={`Preview ${index}`} className="w-full h-48 object-contain rounded" />
+                        <Image fill src={preview} alt={`Preview ${index}`} className="w-full h-48 object-contain rounded" />
                         <button onClick={() => handleRemoveImage(index)} className="absolute top-1 right-1 bg-[#2589f3] text-white rounded-full p-1 hover:bg-[#5dacf2]">
                           <FiX size={16} className="text-white" />
                         </button>
                       </div>
-                    ))}
+                    ))} */}
+                    {mediaImagesPreview?.map((preview, index) => {
+                      // console.log("Preview:", preview);
+
+                      return (
+                        <div key={index} className="relative bg-gray-100 rounded overflow-hidden">
+                          {/* <Image
+                            fill
+                            src={preview}
+                            alt={`Preview ${index}`}
+                            className="w-full h-48 object-contain rounded"
+                          /> */}
+                          <Image
+                            src={preview}
+                            alt={`Preview ${index}`}
+                            width={300}
+                            height={200}
+                          />
+                          <button
+                            onClick={() => handleRemoveImage(index)}
+                            className="absolute top-1 right-1 bg-[#2589f3] text-white rounded-full p-1 hover:bg-[#5dacf2]"
+                          >
+                            <FiX size={16} className="text-white" />
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                   {mediaImages.length < MAX_IMAGES && (
                     <input type="file" accept="image/*" onChange={handleImageChange} className="w-full p-2 border border-gray-300 rounded" />

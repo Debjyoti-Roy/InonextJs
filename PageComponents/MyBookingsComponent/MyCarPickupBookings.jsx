@@ -60,26 +60,20 @@ const MyCarPickupBookings = () => {
         status === "PENDING" || status === "CONFIRMED";
 
     const handleCancel = async (bookingId) => {
-        // const result = await dispatch(cancelPickupCarBooking({ bookingId }));
-        // if (cancelPickupCarBooking.fulfilled.match(result)) {
-        //     dispatch(getLatestCarPickupBooking());
-        //     dispatch(getAllCarPickupBookings());
-        // }()
-        // console.log(bookingId)
         dispatch(cancelCarPickupBookings({ bookingId }))
     };
     useEffect(() => {
         if (cancelCarPickupBookingSuccess) {
+            dispatch(resetCancel())
             dispatch(getLatestCarPickupBooking());
             dispatch(getAllCarPickupBookings());
-            dispatch(resetCancel())
         }
     }, [cancelCarPickupBookingSuccess])
 
 
     const loading =
         latestCarPickupBookingLoading || allCarPickupBookingsLoading;
-    const error = latestCarPickupBookingError?.message || allCarPickupBookingsError?.message;
+    const error =  allCarPickupBookingsError?.message;
 
     return (
         <div className="space-y-8">

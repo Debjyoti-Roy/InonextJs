@@ -53,6 +53,7 @@ const RoomCard = ({ room, setCounter }) => {
                 {validImages.length > 0 ? (
                     <div className="relative w-full h-full">
                         <Image
+                           fill
                             src={validImages[currentImageIndex]}
                             alt={room.name}
                             className="w-full h-full object-cover"
